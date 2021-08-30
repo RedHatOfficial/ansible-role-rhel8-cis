@@ -19690,7 +19690,7 @@
 - name: Set permissions for /etc/ssh/ file(s)
   file:
     path: '{{ item.path }}'
-    mode: '0640'
+    mode: '0600'
   with_items:
   - '{{ files_found.files }}'
   when:
