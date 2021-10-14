@@ -14,19 +14,8 @@ galaxy_info:
     versions:
     - 8
 
-  galaxy_tags:
-  - system
-  - hardening
-  - openscap
-  - ssg
-  - scap
-  - security
-  - compliance
-  - complianceascode
-  - redhatofficial
-  - redhat
-  - rhel8
-  - cis
+  galaxy_tags: [system, hardening, openscap, ssg, scap, security, compliance, complianceascode,
+  redhatofficial, redhat, rhel8, cis]
 
 
 dependencies: []
