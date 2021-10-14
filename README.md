@@ -1,11 +1,12 @@
-CIS Red Hat Enterprise Linux 8 Benchmark
+CIS Red Hat Enterprise Linux 8 Benchmark for Level 2 - Server
 =========
 
-Ansible Role for CIS Red Hat Enterprise Linux 8 Benchmark  
+Ansible Role for CIS Red Hat Enterprise Linux 8 Benchmark for Level 2 - Server  
   
 Profile Description:  
-This profile defines a baseline that aligns to the Center for Internet Security®  
-Red Hat Enterprise Linux 8 Benchmark™, v1.0.0, released 09-30-2019.  
+This profile defines a baseline that aligns to the "Level 2 - Server"  
+configuration from the Center for Internet Security® Red Hat Enterprise  
+Linux 8 Benchmark™, v1.0.1, released 2021-05-19.  
 This profile includes Center for Internet Security®  
 Red Hat Enterprise Linux 8 CIS Benchmarks™ content.
 
