@@ -64,6 +64,7 @@ accounts_tmout: true
 accounts_umask_etc_bashrc: true
 accounts_umask_etc_login_defs: true
 accounts_umask_etc_profile: true
+accounts_user_interactive_home_directory_exists: true
 aide_periodic_cron_checking: true
 audit_rules_dac_modification_chmod: true
 audit_rules_dac_modification_chown: true
@@ -151,6 +152,7 @@ file_groupowner_etc_passwd: true
 file_groupowner_etc_shadow: true
 file_groupowner_grub2_cfg: true
 file_groupowner_sshd_config: true
+file_groupownership_home_directories: true
 file_owner_backup_etc_group: true
 file_owner_backup_etc_gshadow: true
 file_owner_backup_etc_passwd: true
@@ -171,6 +173,7 @@ file_owner_etc_passwd: true
 file_owner_etc_shadow: true
 file_owner_grub2_cfg: true
 file_owner_sshd_config: true
+file_ownership_home_directories: true
 file_permissions_at_allow: true
 file_permissions_backup_etc_group: true
 file_permissions_backup_etc_gshadow: true
@@ -191,6 +194,7 @@ file_permissions_etc_motd: true
 file_permissions_etc_passwd: true
 file_permissions_etc_shadow: true
 file_permissions_grub2_cfg: true
+file_permissions_home_directories: true
 file_permissions_sshd_config: true
 file_permissions_sshd_pub_key: true
 grub2_audit_argument: true
