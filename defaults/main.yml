@@ -44,8 +44,8 @@ var_selinux_policy_name: targeted
 var_selinux_state: enforcing
 var_postfix_inet_interfaces: loopback-only
 var_multiple_time_servers: 0.rhel.pool.ntp.org,1.rhel.pool.ntp.org,2.rhel.pool.ntp.org,3.rhel.pool.ntp.org
-sshd_idle_timeout_value: '900'
 var_sshd_set_keepalive: '0'
+sshd_idle_timeout_value: '900'
 var_sshd_set_login_grace_time: '60'
 sshd_max_auth_tries_value: '4'
 var_sshd_max_sessions: '4'
