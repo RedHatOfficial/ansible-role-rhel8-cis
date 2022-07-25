@@ -219,7 +219,7 @@
   lineinfile:
     dest: /etc/sysconfig/sshd
     state: absent
-    regexp: ^\s*CRYPTO_POLICY.*$
+    regexp: ^\s*(?i)CRYPTO_POLICY.*$
   tags:
   - CCE-80939-2
   - DISA-STIG-RHEL-08-010287
@@ -975,7 +975,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1014,7 +1014,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1047,7 +1047,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1074,7 +1074,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1227,7 +1227,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1283,7 +1283,7 @@
   tags:
   - CCE-83478-8
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020221
+  - DISA-STIG-RHEL-08-020220
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1301,7 +1301,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1340,7 +1340,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1373,7 +1373,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1400,7 +1400,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1553,7 +1553,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -1609,7 +1609,7 @@
   tags:
   - CCE-83480-4
   - CJIS-5.6.2.1.1
-  - DISA-STIG-RHEL-08-020220
+  - DISA-STIG-RHEL-08-020221
   - NIST-800-171-3.5.8
   - NIST-800-53-IA-5(1)(e)
   - NIST-800-53-IA-5(f)
@@ -2528,7 +2528,7 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
 
-- name: Test for existence home directories to avoid creating them, but only fixing group ownership
+- name: Test for existence home directories to avoid creating them.
   ansible.builtin.stat:
     path: '{{ item.value[4] }}'
   register: path_exists
@@ -2540,8 +2540,8 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - item.value[2]|int >= 1000
-  - item.value[2]|int != 65534
+  - item.value[1]|int >= 1000
+  - item.value[1]|int != 65534
   tags:
   - CCE-84038-9
   - DISA-STIG-RHEL-08-010730
@@ -2552,10 +2552,12 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Ensure interactive local users are the group-owners of their respective home directories
+- name: Ensure interactive local users have proper permissions on their respective home directories
   ansible.builtin.file:
     path: '{{ item.0.value[4] }}'
     mode: u-s,g-w-s,o=-
+    follow: false
+    recurse: false
   loop: '{{ local_users|zip(path_exists.results)|list }}'
   when:
   - file_permissions_home_directories | bool
@@ -2777,7 +2779,7 @@
 - name: Replace user umask in /etc/profile
   replace:
     path: /etc/profile
-    regexp: umask.*
+    regexp: ^[^#]*umask
     replace: umask {{ var_accounts_user_umask }}
   register: umask_replace
   tags:
@@ -15922,7 +15924,7 @@
   - name: Check existence of delete_module in /etc/audit/rules.d/
     find:
       paths: /etc/audit/rules.d
-      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: '*.rules'
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -15953,7 +15955,7 @@
     lineinfile:
       path: '{{ audit_file }}'
       regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_per_file[audit_file] | join("|") }}))\b)((?:( -S
-        |,)\w+)+)( (?:-k |-F key=)\w+)
+        |,)\w+)+)( -F auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -15961,7 +15963,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -15974,7 +15976,7 @@
   - name: Check existence of delete_module in /etc/audit/audit.rules
     find:
       paths: /etc/audit
-      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: audit.rules
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -15987,8 +15989,8 @@
   - name: Replace the audit rule in {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( (?:-k
-        |-F key=)\w+)
+      regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( -F
+        auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -15996,7 +15998,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16035,7 +16037,7 @@
   - name: Check existence of delete_module in /etc/audit/rules.d/
     find:
       paths: /etc/audit/rules.d
-      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: '*.rules'
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16066,7 +16068,7 @@
     lineinfile:
       path: '{{ audit_file }}'
       regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_per_file[audit_file] | join("|") }}))\b)((?:( -S
-        |,)\w+)+)( (?:-k |-F key=)\w+)
+        |,)\w+)+)( -F auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16074,7 +16076,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16087,7 +16089,7 @@
   - name: Check existence of delete_module in /etc/audit/audit.rules
     find:
       paths: /etc/audit
-      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: audit.rules
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16100,8 +16102,8 @@
   - name: Replace the audit rule in {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( (?:-k
-        |-F key=)\w+)
+      regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( -F
+        auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16109,7 +16111,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16204,7 +16206,7 @@
   - name: Check existence of init_module in /etc/audit/rules.d/
     find:
       paths: /etc/audit/rules.d
-      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: '*.rules'
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16235,7 +16237,7 @@
     lineinfile:
       path: '{{ audit_file }}'
       regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_per_file[audit_file] | join("|") }}))\b)((?:( -S
-        |,)\w+)+)( (?:-k |-F key=)\w+)
+        |,)\w+)+)( -F auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16243,7 +16245,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16258,7 +16260,7 @@
   - name: Check existence of init_module in /etc/audit/audit.rules
     find:
       paths: /etc/audit
-      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b32(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: audit.rules
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16271,8 +16273,8 @@
   - name: Replace the audit rule in {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( (?:-k
-        |-F key=)\w+)
+      regexp: (-a always,exit -F arch=b32)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( -F
+        auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16280,7 +16282,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b32 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16321,7 +16323,7 @@
   - name: Check existence of init_module in /etc/audit/rules.d/
     find:
       paths: /etc/audit/rules.d
-      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: '*.rules'
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16352,7 +16354,7 @@
     lineinfile:
       path: '{{ audit_file }}'
       regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_per_file[audit_file] | join("|") }}))\b)((?:( -S
-        |,)\w+)+)( (?:-k |-F key=)\w+)
+        |,)\w+)+)( -F auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16360,7 +16362,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -16375,7 +16377,7 @@
   - name: Check existence of init_module in /etc/audit/audit.rules
     find:
       paths: /etc/audit
-      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* (-k\s+|-F\s+key=)\S+\s*$
+      contains: -a always,exit -F arch=b64(( -S |,)\w+)*(( -S |,){{ item }})+(( -S |,)\w+)* -F auid>=1000 -F auid!=unset (-k\s+|-F\s+key=)\S+\s*$
       patterns: audit.rules
     register: find_command
     loop: '{{ (syscall_grouping + syscalls) | unique }}'
@@ -16388,8 +16390,8 @@
   - name: Replace the audit rule in {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( (?:-k
-        |-F key=)\w+)
+      regexp: (-a always,exit -F arch=b64)(?=.*(?:(?:-S |,)(?:{{ syscalls_found | join("|") }}))\b)((?:( -S |,)\w+)+)( -F
+        auid>=1000 -F auid!=unset (?:-k |-F key=)\w+)
       line: \1\2\3{{ missing_syscalls | join("\3") }}\4
       backrefs: true
       state: present
@@ -16397,7 +16399,7 @@
   - name: Add the audit rule to {{ audit_file }}
     lineinfile:
       path: '{{ audit_file }}'
-      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F key=module-change
+      line: -a always,exit -F arch=b64 -S {{ syscalls | join(',') }} -F auid>=1000 -F auid!=unset -F key=module-change
       create: true
       mode: o-rwx
       state: present
@@ -17901,7 +17903,6 @@
   tags:
   - CCE-80682-8
   - CJIS-5.4.1.1
-  - DISA-STIG-RHEL-08-030050
   - NIST-800-53-AU-5(1)
   - NIST-800-53-AU-5(2)
   - NIST-800-53-AU-5(4)
@@ -17940,7 +17941,6 @@
   tags:
   - CCE-80682-8
   - CJIS-5.4.1.1
-  - DISA-STIG-RHEL-08-030050
   - NIST-800-53-AU-5(1)
   - NIST-800-53-AU-5(2)
   - NIST-800-53-AU-5(4)
@@ -18603,9 +18603,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_ra.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -18631,7 +18634,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_ra from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_ra
     replace: '#net.ipv6.conf.all.accept_ra'
   loop: '{{ find_sysctl_d.files }}'
@@ -18687,9 +18690,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -18717,7 +18723,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_redirects
     replace: '#net.ipv6.conf.all.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -18777,9 +18783,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -18805,7 +18814,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_source_route
     replace: '#net.ipv6.conf.all.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -18861,9 +18870,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.forwarding.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -18889,7 +18901,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.forwarding from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.forwarding
     replace: '#net.ipv6.conf.all.forwarding'
   loop: '{{ find_sysctl_d.files }}'
@@ -18945,9 +18957,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_ra.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -18973,7 +18988,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_ra from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_ra
     replace: '#net.ipv6.conf.default.accept_ra'
   loop: '{{ find_sysctl_d.files }}'
@@ -19029,9 +19044,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19057,7 +19075,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_redirects
     replace: '#net.ipv6.conf.default.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -19113,9 +19131,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19143,7 +19164,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_source_route
     replace: '#net.ipv6.conf.default.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -19203,9 +19224,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19233,7 +19257,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_redirects
     replace: '#net.ipv4.conf.all.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -19293,9 +19317,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19323,7 +19350,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_source_route
     replace: '#net.ipv4.conf.all.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -19383,9 +19410,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.log_martians.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19410,7 +19440,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.log_martians from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.log_martians
     replace: '#net.ipv4.conf.all.log_martians'
   loop: '{{ find_sysctl_d.files }}'
@@ -19464,9 +19494,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.rp_filter.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19493,7 +19526,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.rp_filter from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.rp_filter
     replace: '#net.ipv4.conf.all.rp_filter'
   loop: '{{ find_sysctl_d.files }}'
@@ -19551,9 +19584,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.secure_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19579,7 +19615,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.secure_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.secure_redirects
     replace: '#net.ipv4.conf.all.secure_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -19635,9 +19671,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19665,7 +19704,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_redirects
     replace: '#net.ipv4.conf.default.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -19725,9 +19764,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19755,7 +19797,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_source_route
     replace: '#net.ipv4.conf.default.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -19815,9 +19857,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.log_martians.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19842,7 +19887,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.log_martians from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.log_martians
     replace: '#net.ipv4.conf.default.log_martians'
   loop: '{{ find_sysctl_d.files }}'
@@ -19896,9 +19941,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.rp_filter.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -19924,7 +19972,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.rp_filter from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.rp_filter
     replace: '#net.ipv4.conf.default.rp_filter'
   loop: '{{ find_sysctl_d.files }}'
@@ -19980,9 +20028,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.secure_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20008,7 +20059,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.secure_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.secure_redirects
     replace: '#net.ipv4.conf.default.secure_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -20064,9 +20115,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.icmp_echo_ignore_broadcasts.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20093,7 +20147,7 @@
 
 - name: Comment out any occurrences of net.ipv4.icmp_echo_ignore_broadcasts from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.icmp_echo_ignore_broadcasts
     replace: '#net.ipv4.icmp_echo_ignore_broadcasts'
   loop: '{{ find_sysctl_d.files }}'
@@ -20151,9 +20205,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20178,7 +20235,7 @@
 
 - name: Comment out any occurrences of net.ipv4.icmp_ignore_bogus_error_responses from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses
     replace: '#net.ipv4.icmp_ignore_bogus_error_responses'
   loop: '{{ find_sysctl_d.files }}'
@@ -20232,9 +20289,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.tcp_syncookies.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20263,7 +20323,7 @@
 
 - name: Comment out any occurrences of net.ipv4.tcp_syncookies from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.tcp_syncookies
     replace: '#net.ipv4.tcp_syncookies'
   loop: '{{ find_sysctl_d.files }}'
@@ -20325,9 +20385,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.send_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20356,7 +20419,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.send_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.send_redirects
     replace: '#net.ipv4.conf.all.send_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -20418,9 +20481,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.send_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20449,7 +20515,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.send_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.send_redirects
     replace: '#net.ipv4.conf.default.send_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -20511,9 +20577,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.ip_forward.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -20541,7 +20610,7 @@
 
 - name: Comment out any occurrences of net.ipv4.ip_forward from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.ip_forward
     replace: '#net.ipv4.ip_forward'
   loop: '{{ find_sysctl_d.files }}'
@@ -23659,9 +23728,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*fs.suid_dumpable.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -23684,7 +23756,7 @@
 
 - name: Comment out any occurrences of fs.suid_dumpable from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*fs.suid_dumpable
     replace: '#fs.suid_dumpable'
   loop: '{{ find_sysctl_d.files }}'
@@ -23734,9 +23806,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.randomize_va_space.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -23762,7 +23837,7 @@
 
 - name: Comment out any occurrences of kernel.randomize_va_space from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.randomize_va_space
     replace: '#kernel.randomize_va_space'
   loop: '{{ find_sysctl_d.files }}'
