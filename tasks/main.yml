@@ -331,6 +331,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-MA-4(6)
   - NIST-800-53-SC-13
+  - PCI-DSS-Req-2.2
   - configure_ssh_crypto_policy
   - disable_strategy
   - low_complexity
@@ -345,6 +346,365 @@
   - medium_disruption | bool
   - medium_severity | bool
   - reboot_required | bool
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86195-5
+  - DISA-STIG-RHEL-08-020032
+  - NIST-800-53-AC-23
+  - NIST-800-53-CM-6(a)
+  - dconf_gnome_disable_user_list
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  when:
+  - DISA_STIG_RHEL_08_020032 | bool
+  - dconf_gnome_disable_user_list | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+
+- name: Disable the GNOME3 Login User List
+  ini_file:
+    dest: /etc/dconf/db/gdm.d/00-security-settings
+    section: org/gnome/login-screen
+    option: disable-user-list
+    value: 'true'
+    no_extra_spaces: true
+    create: true
+  when:
+  - DISA_STIG_RHEL_08_020032 | bool
+  - dconf_gnome_disable_user_list | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86195-5
+  - DISA-STIG-RHEL-08-020032
+  - NIST-800-53-AC-23
+  - NIST-800-53-CM-6(a)
+  - dconf_gnome_disable_user_list
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Prevent user modification of GNOME3 disablement of Login User List
+  lineinfile:
+    path: /etc/dconf/db/gdm.d/locks/00-security-settings-lock
+    regexp: ^/org/gnome/login-screen/disable-user-list$
+    line: /org/gnome/login-screen/disable-user-list
+    create: true
+  when:
+  - DISA_STIG_RHEL_08_020032 | bool
+  - dconf_gnome_disable_user_list | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86195-5
+  - DISA-STIG-RHEL-08-020032
+  - NIST-800-53-AC-23
+  - NIST-800-53-CM-6(a)
+  - dconf_gnome_disable_user_list
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Dconf Update
+  command: dconf update
+  when:
+  - DISA_STIG_RHEL_08_020032 | bool
+  - dconf_gnome_disable_user_list | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86195-5
+  - DISA-STIG-RHEL-08-020032
+  - NIST-800-53-AC-23
+  - NIST-800-53-CM-6(a)
+  - dconf_gnome_disable_user_list
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86007-2
+  - gnome_gdm_disable_xdmcp
+  - high_severity
+  - low_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - unknown_strategy
+  when:
+  - gnome_gdm_disable_xdmcp | bool
+  - high_severity | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+
+- name: Disable XDMCP in GDM
+  ini_file:
+    path: /etc/gdm/custom.conf
+    section: xdmcp
+    option: Enable
+    value: 'false'
+    create: true
+    mode: 420
+  when:
+  - gnome_gdm_disable_xdmcp | bool
+  - high_severity | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  tags:
+  - CCE-86007-2
+  - gnome_gdm_disable_xdmcp
+  - high_severity
+  - low_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-89904-7
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  when:
+  - dconf_gnome_disable_automount | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+
+- name: Disable GNOME3 Automounting - automount
+  ini_file:
+    dest: /etc/dconf/db/local.d/00-security-settings
+    section: org/gnome/desktop/media-handling
+    option: automount
+    value: 'false'
+    create: true
+    no_extra_spaces: true
+  when:
+  - dconf_gnome_disable_automount | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-89904-7
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Prevent user modification of GNOME3 Automounting - automount
+  lineinfile:
+    path: /etc/dconf/db/local.d/locks/00-security-settings-lock
+    regexp: ^/org/gnome/desktop/media-handling/automount$
+    line: /org/gnome/desktop/media-handling/automount
+    create: true
+  when:
+  - dconf_gnome_disable_automount | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-89904-7
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Dconf Update
+  command: dconf update
+  when:
+  - dconf_gnome_disable_automount | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-89904-7
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-83693-2
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount_open
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  when:
+  - dconf_gnome_disable_automount_open | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+
+- name: Disable GNOME3 Automounting - automount-open
+  ini_file:
+    dest: /etc/dconf/db/local.d/00-security-settings
+    section: org/gnome/desktop/media-handling
+    option: automount-open
+    value: 'false'
+    create: true
+    no_extra_spaces: true
+  when:
+  - dconf_gnome_disable_automount_open | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-83693-2
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount_open
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Prevent user modification of GNOME3 Automounting - automount-open
+  lineinfile:
+    path: /etc/dconf/db/local.d/locks/00-security-settings-lock
+    regexp: ^/org/gnome/desktop/media-handling/automount-open$
+    line: /org/gnome/desktop/media-handling/automount-open
+    create: true
+  when:
+  - dconf_gnome_disable_automount_open | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-83693-2
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount_open
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
+- name: Dconf Update
+  command: dconf update
+  when:
+  - dconf_gnome_disable_automount_open | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - '"gdm" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-83693-2
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - dconf_gnome_disable_automount_open
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
 
 - name: Ensure sudo is installed
   package:
@@ -361,6 +721,7 @@
   tags:
   - CCE-82214-8
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-10.2.1.5
   - enable_strategy
   - low_complexity
   - low_disruption
@@ -376,6 +737,7 @@
     validate: /usr/sbin/visudo -cf %s
   tags:
   - CCE-83798-9
+  - PCI-DSS-Req-10.2.1.5
   - low_complexity
   - low_disruption
   - medium_severity
@@ -400,6 +762,7 @@
   register: edit_sudoers_logfile_option
   tags:
   - CCE-83601-5
+  - PCI-DSS-Req-10.2.1.5
   - low_complexity
   - low_disruption
   - low_severity
@@ -429,6 +792,7 @@
   - edit_sudoers_logfile_option is defined and not edit_sudoers_logfile_option.changed
   tags:
   - CCE-83601-5
+  - PCI-DSS-Req-10.2.1.5
   - low_complexity
   - low_disruption
   - low_severity
@@ -737,8 +1101,6 @@
     cmd: rpm -qV pam
   register: result_altered_authselect
   ignore_errors: true
-  args:
-    warn: false
   when:
   - configure_strategy | bool
   - enable_authselect | bool
@@ -829,6 +1191,28 @@
   - no_reboot_needed
   - unknown_strategy
 
+- name: Modify the System Login Banner for Remote Connections - ensure correct banner
+  copy:
+    dest: /etc/issue.net
+    content: '{{ login_banner_text | regex_replace("^\^(.*)\$$", "\1") | regex_replace("^\((.*\.)\|.*\)$", "\1") | regex_replace("\[\\s\\n\]\+","
+      ") | regex_replace("\(\?:\[\\n\]\+\|\(\?:\\\\n\)\+\)", "\n") | regex_replace("\\", "") | wordwrap() }}'
+  when:
+  - banner_etc_issue_net | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86147-6
+  - banner_etc_issue_net
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+
 - name: Modify the System Message of the Day Banner - ensure correct banner
   copy:
     dest: /etc/motd
@@ -887,6 +1271,47 @@
   - CCE-83708-8
   - configure_strategy
   - file_groupowner_etc_issue
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Test for existence /etc/issue.net
+  stat:
+    path: /etc/issue.net
+  register: file_exists
+  tags:
+  - CCE-86051-0
+  - configure_strategy
+  - file_groupowner_etc_issue_net
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_groupowner_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Ensure group owner 0 on /etc/issue.net
+  file:
+    path: /etc/issue.net
+    group: '0'
+  when:
+  - configure_strategy | bool
+  - file_groupowner_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86051-0
+  - configure_strategy
+  - file_groupowner_etc_issue_net
   - low_complexity
   - low_disruption
   - medium_severity
@@ -974,6 +1399,47 @@
   - medium_severity
   - no_reboot_needed
 
+- name: Test for existence /etc/issue.net
+  stat:
+    path: /etc/issue.net
+  register: file_exists
+  tags:
+  - CCE-86054-4
+  - configure_strategy
+  - file_owner_etc_issue_net
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_owner_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Ensure owner 0 on /etc/issue.net
+  file:
+    path: /etc/issue.net
+    owner: '0'
+  when:
+  - configure_strategy | bool
+  - file_owner_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86054-4
+  - configure_strategy
+  - file_owner_etc_issue_net
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
 - name: Test for existence /etc/motd
   stat:
     path: /etc/motd
@@ -1051,6 +1517,47 @@
   - CCE-83348-3
   - configure_strategy
   - file_permissions_etc_issue
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Test for existence /etc/issue.net
+  stat:
+    path: /etc/issue.net
+  register: file_exists
+  tags:
+  - CCE-86047-8
+  - configure_strategy
+  - file_permissions_etc_issue_net
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_permissions_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Ensure permission u-xs,g-xws,o-xwt on /etc/issue.net
+  file:
+    path: /etc/issue.net
+    mode: u-xs,g-xws,o-xwt
+  when:
+  - configure_strategy | bool
+  - file_permissions_etc_issue_net | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86047-8
+  - configure_strategy
+  - file_permissions_etc_issue_net
   - low_complexity
   - low_disruption
   - medium_severity
@@ -4446,6 +4953,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-IA-5(1)(d)
   - NIST-800-53-IA-5(f)
+  - PCI-DSS-Req-8.3.9
   - accounts_minimum_age_login_defs
   - low_complexity
   - low_disruption
@@ -4484,6 +4992,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-IA-5(1)(d)
   - NIST-800-53-IA-5(f)
+  - PCI-DSS-Req-8.3.9
   - accounts_minimum_age_login_defs
   - low_complexity
   - low_disruption
@@ -4553,6 +5062,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-IA-5(1)(d)
   - NIST-800-53-IA-5(f)
+  - PCI-DSS-Req-8.3.9
   - accounts_password_warn_age_login_defs
   - low_complexity
   - low_disruption
@@ -4588,6 +5098,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-IA-5(1)(d)
   - NIST-800-53-IA-5(f)
+  - PCI-DSS-Req-8.3.9
   - accounts_password_warn_age_login_defs
   - low_complexity
   - low_disruption
@@ -4651,6 +5162,7 @@
     replace: auth             required        pam_wheel.so use_uid
   tags:
   - CCE-83318-6
+  - PCI-DSS-Req-8.6.1
   - low_complexity
   - low_disruption
   - medium_severity
@@ -4689,6 +5201,7 @@
   - NIST-800-53-AC-2(5)
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-10
+  - PCI-DSS-Req-8.6.1
   - accounts_tmout
   - low_complexity
   - low_disruption
@@ -4718,6 +5231,7 @@
   - NIST-800-53-AC-2(5)
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-10
+  - PCI-DSS-Req-8.6.1
   - accounts_tmout
   - low_complexity
   - low_disruption
@@ -4747,6 +5261,7 @@
   - NIST-800-53-AC-2(5)
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-10
+  - PCI-DSS-Req-8.6.1
   - accounts_tmout
   - low_complexity
   - low_disruption
@@ -5167,17 +5682,20 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Replace user umask in /etc/bashrc
-  replace:
+- name: Check if umask in /etc/bashrc is already set
+  ansible.builtin.lineinfile:
     path: /etc/bashrc
-    regexp: umask.*
-    replace: umask {{ var_accounts_user_umask }}
+    regexp: ^(\s*)umask\s+.*
+    state: absent
+  check_mode: true
+  changed_when: false
   register: umask_replace
   tags:
   - CCE-81036-6
   - DISA-STIG-RHEL-08-020353
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_bashrc
   - low_complexity
   - low_disruption
@@ -5193,8 +5711,35 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
 
-- name: Append user umask in /etc/bashrc
-  lineinfile:
+- name: Replace user umask in /etc/bashrc
+  ansible.builtin.replace:
+    path: /etc/bashrc
+    regexp: ^(\s*)umask(\s+).*
+    replace: \g<1>umask\g<2>{{ var_accounts_user_umask }}
+  when:
+  - DISA_STIG_RHEL_08_020353 | bool
+  - accounts_umask_etc_bashrc | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - umask_replace.found > 0
+  tags:
+  - CCE-81036-6
+  - DISA-STIG-RHEL-08-020353
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
+  - accounts_umask_etc_bashrc
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Ensure the Default umask is Appended Correctly
+  ansible.builtin.lineinfile:
     create: true
     path: /etc/bashrc
     line: umask {{ var_accounts_user_umask }}
@@ -5206,12 +5751,13 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - umask_replace is not changed
+  - umask_replace.found == 0
   tags:
   - CCE-81036-6
   - DISA-STIG-RHEL-08-020353
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_bashrc
   - low_complexity
   - low_disruption
@@ -5227,6 +5773,7 @@
   - DISA-STIG-RHEL-08-020351
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_login_defs
   - low_complexity
   - low_disruption
@@ -5242,12 +5789,14 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
 
-- name: Ensure the Default UMASK is Set Correctly
-  replace:
+- name: Check if UMASK is already set
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
-    regexp: ^UMASK
-    replace: UMASK {{ var_accounts_user_umask }}
-  register: umask_replace
+    regexp: ^(\s*)UMASK\s+.*
+    state: absent
+  check_mode: true
+  changed_when: false
+  register: result_umask_is_set
   when:
   - DISA_STIG_RHEL_08_020351 | bool
   - accounts_umask_etc_login_defs | bool
@@ -5262,6 +5811,35 @@
   - DISA-STIG-RHEL-08-020351
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
+  - accounts_umask_etc_login_defs
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Replace user UMASK in /etc/login.defs
+  ansible.builtin.replace:
+    path: /etc/login.defs
+    regexp: ^(\s*)UMASK(\s+).*
+    replace: \g<1>UMASK\g<2>{{ var_accounts_user_umask }}
+  when:
+  - DISA_STIG_RHEL_08_020351 | bool
+  - accounts_umask_etc_login_defs | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - '"shadow-utils" in ansible_facts.packages'
+  - result_umask_is_set.found > 0
+  tags:
+  - CCE-82888-9
+  - DISA-STIG-RHEL-08-020351
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_login_defs
   - low_complexity
   - low_disruption
@@ -5270,7 +5848,7 @@
   - restrict_strategy
 
 - name: Ensure the Default UMASK is Appended Correctly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     path: /etc/login.defs
     line: UMASK {{ var_accounts_user_umask }}
@@ -5283,12 +5861,13 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"shadow-utils" in ansible_facts.packages'
-  - umask_replace is not changed
+  - result_umask_is_set.found == 0
   tags:
   - CCE-82888-9
   - DISA-STIG-RHEL-08-020351
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_login_defs
   - low_complexity
   - low_disruption
@@ -5309,6 +5888,7 @@
   - DISA-STIG-RHEL-08-020353
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_profile
   - low_complexity
   - low_disruption
@@ -5334,6 +5914,7 @@
   - DISA-STIG-RHEL-08-020353
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_profile
   - low_complexity
   - low_disruption
@@ -5368,6 +5949,7 @@
   - DISA-STIG-RHEL-08-020353
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-8.6.1
   - accounts_umask_etc_profile
   - low_complexity
   - low_disruption
@@ -5398,6 +5980,7 @@
   - NIST-800-53-AU-7(1)
   - NIST-800-53-AU-7(2)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-10.2.1
   - enable_strategy
   - low_complexity
   - low_disruption
@@ -5503,16 +6086,16 @@
   - PCI-DSS-Req-10.3
   - grub2_audit_argument
   - low_disruption
+  - low_severity
   - medium_complexity
-  - medium_severity
   - reboot_required
   - restrict_strategy
   when:
   - DISA_STIG_RHEL_08_030601 | bool
   - grub2_audit_argument | bool
   - low_disruption | bool
+  - low_severity | bool
   - medium_complexity | bool
-  - medium_severity | bool
   - reboot_required | bool
   - restrict_strategy | bool
 
@@ -5522,8 +6105,8 @@
   - DISA_STIG_RHEL_08_030601 | bool
   - grub2_audit_argument | bool
   - low_disruption | bool
+  - low_severity | bool
   - medium_complexity | bool
-  - medium_severity | bool
   - reboot_required | bool
   - restrict_strategy | bool
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -5541,8 +6124,8 @@
   - PCI-DSS-Req-10.3
   - grub2_audit_argument
   - low_disruption
+  - low_severity
   - medium_complexity
-  - medium_severity
   - reboot_required
   - restrict_strategy
 
@@ -5985,7 +6568,7 @@
 
 - name: Set architecture for audit mount tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030302 | bool
   - audit_rules_media_export | bool
@@ -5996,6 +6579,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80722-2
   - CJIS-5.4.1.1
@@ -6013,7 +6598,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for mount for x86 platform
+- name: Perform remediation of Audit rules for mount for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -6129,7 +6714,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for mount for x86_64 platform
+- name: Perform remediation of Audit rules for mount for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -6274,7 +6859,7 @@
 
 - name: Set architecture for audit tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - audit_rules_networkconfig_modification | bool
   - low_complexity | bool
@@ -6284,6 +6869,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80723-0
   - CJIS-5.4.1.1
@@ -6300,7 +6887,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Remediate audit rules for network configuration for x86
+- name: Remediate audit rules for network configuration for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -6420,7 +7007,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Remediate audit rules for network configuration for x86_64
+- name: Remediate audit rules for network configuration for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -9974,7 +10561,7 @@
 
 - name: Set architecture for audit chmod tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030490 | bool
   - audit_rules_dac_modification_chmod | bool
@@ -9985,6 +10572,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80685-1
   - CJIS-5.4.1.1
@@ -10001,7 +10590,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for chmod for x86 platform
+- name: Perform remediation of Audit rules for chmod for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10122,7 +10711,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for chmod for x86_64 platform
+- name: Perform remediation of Audit rules for chmod for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10273,7 +10862,7 @@
 
 - name: Set architecture for audit chown tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030480 | bool
   - audit_rules_dac_modification_chown | bool
@@ -10284,6 +10873,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80686-9
   - CJIS-5.4.1.1
@@ -10300,7 +10891,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for chown for x86 platform
+- name: Perform remediation of Audit rules for chown for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10423,7 +11014,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for chown for x86_64 platform
+- name: Perform remediation of Audit rules for chown for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10576,7 +11167,7 @@
 
 - name: Set architecture for audit fchmod tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030490 | bool
   - audit_rules_dac_modification_fchmod | bool
@@ -10587,6 +11178,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80687-7
   - CJIS-5.4.1.1
@@ -10603,7 +11196,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchmod for x86 platform
+- name: Perform remediation of Audit rules for fchmod for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10724,7 +11317,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchmod for x86_64 platform
+- name: Perform remediation of Audit rules for fchmod for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -10875,7 +11468,7 @@
 
 - name: Set architecture for audit fchmodat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030490 | bool
   - audit_rules_dac_modification_fchmodat | bool
@@ -10886,6 +11479,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80688-5
   - CJIS-5.4.1.1
@@ -10902,7 +11497,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchmodat for x86 platform
+- name: Perform remediation of Audit rules for fchmodat for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11023,7 +11618,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchmodat for x86_64 platform
+- name: Perform remediation of Audit rules for fchmodat for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11174,7 +11769,7 @@
 
 - name: Set architecture for audit fchown tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030480 | bool
   - audit_rules_dac_modification_fchown | bool
@@ -11185,6 +11780,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80689-3
   - CJIS-5.4.1.1
@@ -11201,7 +11798,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchown for x86 platform
+- name: Perform remediation of Audit rules for fchown for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11324,7 +11921,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchown for x86_64 platform
+- name: Perform remediation of Audit rules for fchown for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11477,7 +12074,7 @@
 
 - name: Set architecture for audit fchownat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030480 | bool
   - audit_rules_dac_modification_fchownat | bool
@@ -11488,6 +12085,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80690-1
   - CJIS-5.4.1.1
@@ -11504,7 +12103,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchownat for x86 platform
+- name: Perform remediation of Audit rules for fchownat for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11627,7 +12226,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fchownat for x86_64 platform
+- name: Perform remediation of Audit rules for fchownat for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -11780,7 +12379,7 @@
 
 - name: Set architecture for audit fremovexattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_fremovexattr | bool
@@ -11791,6 +12390,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80691-9
   - CJIS-5.4.1.1
@@ -11807,7 +12408,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fremovexattr for x86 platform
+- name: Perform remediation of Audit rules for fremovexattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -12033,7 +12634,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fremovexattr for x86_64 platform
+- name: Perform remediation of Audit rules for fremovexattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -12289,7 +12890,7 @@
 
 - name: Set architecture for audit fsetxattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_fsetxattr | bool
@@ -12300,6 +12901,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80692-7
   - CJIS-5.4.1.1
@@ -12316,7 +12919,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fsetxattr for x86 platform
+- name: Perform remediation of Audit rules for fsetxattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -12542,7 +13145,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for fsetxattr for x86_64 platform
+- name: Perform remediation of Audit rules for fsetxattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -12798,7 +13401,7 @@
 
 - name: Set architecture for audit lchown tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030480 | bool
   - audit_rules_dac_modification_lchown | bool
@@ -12809,6 +13412,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80693-5
   - CJIS-5.4.1.1
@@ -12825,7 +13430,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lchown for x86 platform
+- name: Perform remediation of Audit rules for lchown for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -12948,7 +13553,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lchown for x86_64 platform
+- name: Perform remediation of Audit rules for lchown for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -13101,7 +13706,7 @@
 
 - name: Set architecture for audit lremovexattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_lremovexattr | bool
@@ -13112,6 +13717,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80694-3
   - CJIS-5.4.1.1
@@ -13128,7 +13735,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lremovexattr for x86 platform
+- name: Perform remediation of Audit rules for lremovexattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -13354,7 +13961,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lremovexattr for x86_64 platform
+- name: Perform remediation of Audit rules for lremovexattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -13610,7 +14217,7 @@
 
 - name: Set architecture for audit lsetxattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_lsetxattr | bool
@@ -13621,6 +14228,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80695-0
   - CJIS-5.4.1.1
@@ -13637,7 +14246,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lsetxattr for x86 platform
+- name: Perform remediation of Audit rules for lsetxattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -13863,7 +14472,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for lsetxattr for x86_64 platform
+- name: Perform remediation of Audit rules for lsetxattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -14119,7 +14728,7 @@
 
 - name: Set architecture for audit removexattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_removexattr | bool
@@ -14130,6 +14739,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80696-8
   - CJIS-5.4.1.1
@@ -14146,7 +14757,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for removexattr for x86 platform
+- name: Perform remediation of Audit rules for removexattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -14372,7 +14983,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for removexattr for x86_64 platform
+- name: Perform remediation of Audit rules for removexattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -14628,7 +15239,7 @@
 
 - name: Set architecture for audit setxattr tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030200 | bool
   - audit_rules_dac_modification_setxattr | bool
@@ -14639,6 +15250,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80697-6
   - CJIS-5.4.1.1
@@ -14655,7 +15268,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for setxattr for x86 platform
+- name: Perform remediation of Audit rules for setxattr for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -14881,7 +15494,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for setxattr for x86_64 platform
+- name: Perform remediation of Audit rules for setxattr for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15136,7 +15749,7 @@
 
 - name: Set architecture for audit rename tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030361 | bool
   - audit_rules_file_deletion_events_rename | bool
@@ -15147,6 +15760,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80703-2
   - DISA-STIG-RHEL-08-030361
@@ -15162,7 +15777,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for rename for x86 platform
+- name: Perform remediation of Audit rules for rename for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15286,7 +15901,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for rename for x86_64 platform
+- name: Perform remediation of Audit rules for rename for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15439,7 +16054,7 @@
 
 - name: Set architecture for audit renameat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030361 | bool
   - audit_rules_file_deletion_events_renameat | bool
@@ -15450,6 +16065,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80704-0
   - DISA-STIG-RHEL-08-030361
@@ -15465,7 +16082,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for renameat for x86 platform
+- name: Perform remediation of Audit rules for renameat for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15589,7 +16206,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for renameat for x86_64 platform
+- name: Perform remediation of Audit rules for renameat for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15742,7 +16359,7 @@
 
 - name: Set architecture for audit unlink tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030361 | bool
   - audit_rules_file_deletion_events_unlink | bool
@@ -15753,6 +16370,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80706-5
   - DISA-STIG-RHEL-08-030361
@@ -15768,7 +16387,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for unlink for x86 platform
+- name: Perform remediation of Audit rules for unlink for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -15892,7 +16511,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for unlink for x86_64 platform
+- name: Perform remediation of Audit rules for unlink for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16045,7 +16664,7 @@
 
 - name: Set architecture for audit unlinkat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030361 | bool
   - audit_rules_file_deletion_events_unlinkat | bool
@@ -16056,6 +16675,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80707-3
   - DISA-STIG-RHEL-08-030361
@@ -16071,7 +16692,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for unlinkat for x86 platform
+- name: Perform remediation of Audit rules for unlinkat for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16195,7 +16816,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for unlinkat for x86_64 platform
+- name: Perform remediation of Audit rules for unlinkat for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16349,7 +16970,7 @@
 
 - name: Set architecture for audit creat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030420 | bool
   - audit_rules_unsuccessful_file_modification_creat | bool
@@ -16360,6 +16981,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80751-1
   - DISA-STIG-RHEL-08-030420
@@ -16376,7 +16999,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for creat EACCES for x86 platform
+- name: Perform remediation of Audit rules for creat EACCES for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16505,7 +17128,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for creat EACCES for x86_64 platform
+- name: Perform remediation of Audit rules for creat EACCES for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16635,7 +17258,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for creat EPERM for x86 platform
+- name: Perform remediation of Audit rules for creat EPERM for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16764,7 +17387,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for creat EPERM for x86_64 platform
+- name: Perform remediation of Audit rules for creat EPERM for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -16923,7 +17546,7 @@
 
 - name: Set architecture for audit ftruncate tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030420 | bool
   - audit_rules_unsuccessful_file_modification_ftruncate | bool
@@ -16934,6 +17557,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80752-9
   - DISA-STIG-RHEL-08-030420
@@ -16950,7 +17575,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for ftruncate EACCES for x86 platform
+- name: Perform remediation of Audit rules for ftruncate EACCES for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17079,7 +17704,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for ftruncate EACCES for x86_64 platform
+- name: Perform remediation of Audit rules for ftruncate EACCES for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17209,7 +17834,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for ftruncate EPERM for x86 platform
+- name: Perform remediation of Audit rules for ftruncate EPERM for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17338,7 +17963,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for ftruncate EPERM for x86_64 platform
+- name: Perform remediation of Audit rules for ftruncate EPERM for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17497,7 +18122,7 @@
 
 - name: Set architecture for audit open tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030420 | bool
   - audit_rules_unsuccessful_file_modification_open | bool
@@ -17508,6 +18133,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80753-7
   - DISA-STIG-RHEL-08-030420
@@ -17524,7 +18151,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for open EACCES for x86 platform
+- name: Perform remediation of Audit rules for open EACCES for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17653,7 +18280,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for open EACCES for x86_64 platform
+- name: Perform remediation of Audit rules for open EACCES for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17783,7 +18410,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for open EPERM for x86 platform
+- name: Perform remediation of Audit rules for open EPERM for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -17912,7 +18539,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for open EPERM for x86_64 platform
+- name: Perform remediation of Audit rules for open EPERM for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18071,7 +18698,7 @@
 
 - name: Set architecture for audit openat tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030420 | bool
   - audit_rules_unsuccessful_file_modification_openat | bool
@@ -18082,6 +18709,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80754-5
   - DISA-STIG-RHEL-08-030420
@@ -18098,7 +18727,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for openat EACCES for x86 platform
+- name: Perform remediation of Audit rules for openat EACCES for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18227,7 +18856,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for openat EACCES for x86_64 platform
+- name: Perform remediation of Audit rules for openat EACCES for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18357,7 +18986,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for openat EPERM for x86 platform
+- name: Perform remediation of Audit rules for openat EPERM for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18486,7 +19115,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for openat EPERM for x86_64 platform
+- name: Perform remediation of Audit rules for openat EPERM for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18645,7 +19274,7 @@
 
 - name: Set architecture for audit truncate tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030420 | bool
   - audit_rules_unsuccessful_file_modification_truncate | bool
@@ -18656,6 +19285,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80756-0
   - DISA-STIG-RHEL-08-030420
@@ -18672,7 +19303,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for truncate EACCES for x86 platform
+- name: Perform remediation of Audit rules for truncate EACCES for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18801,7 +19432,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for truncate EACCES for x86_64 platform
+- name: Perform remediation of Audit rules for truncate EACCES for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -18931,7 +19562,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for truncate EPERM for x86 platform
+- name: Perform remediation of Audit rules for truncate EPERM for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -19060,7 +19691,7 @@
   - reboot_required
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for truncate EPERM for x86_64 platform
+- name: Perform remediation of Audit rules for truncate EPERM for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -19219,7 +19850,7 @@
 
 - name: Set architecture for audit delete_module tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030390 | bool
   - audit_rules_kernel_module_loading_delete | bool
@@ -19230,6 +19861,8 @@
   - no_reboot_needed | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80711-5
   - DISA-STIG-RHEL-08-030390
@@ -19246,7 +19879,7 @@
   - medium_severity
   - no_reboot_needed
 
-- name: Perform remediation of Audit rules for delete_module for x86 platform
+- name: Perform remediation of Audit rules for delete_module for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -19361,7 +19994,7 @@
   - medium_severity
   - no_reboot_needed
 
-- name: Perform remediation of Audit rules for delete_module for x86_64 platform
+- name: Perform remediation of Audit rules for delete_module for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -19506,7 +20139,7 @@
 
 - name: Set architecture for audit init_module tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - DISA_STIG_RHEL_08_030360 | bool
   - audit_rules_kernel_module_loading_init | bool
@@ -19517,6 +20150,8 @@
   - no_reboot_needed | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80713-1
   - DISA-STIG-RHEL-08-030360
@@ -19533,7 +20168,7 @@
   - medium_severity
   - no_reboot_needed
 
-- name: Perform remediation of Audit rules for init_module for x86 platform
+- name: Perform remediation of Audit rules for init_module for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -19652,7 +20287,7 @@
   - medium_severity
   - no_reboot_needed
 
-- name: Perform remediation of Audit rules for init_module for x86_64 platform
+- name: Perform remediation of Audit rules for init_module for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -20310,7 +20945,7 @@
 
 - name: Set architecture for audit tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - audit_rules_time_adjtimex | bool
   - low_complexity | bool
@@ -20320,6 +20955,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80745-3
   - CJIS-5.4.1.1
@@ -20336,7 +20973,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for adjtimex for x86 platform
+- name: Perform remediation of Audit rules for adjtimex for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -20456,7 +21093,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for adjtimex for x86_64 platform
+- name: Perform remediation of Audit rules for adjtimex for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -20604,7 +21241,7 @@
 
 - name: Set architecture for audit tasks
   set_fact:
-    audit_arch: b{{ ansible_architecture | regex_replace('.*(\d\d$)','\1') }}
+    audit_arch: b64
   when:
   - audit_rules_time_clock_settime | bool
   - low_complexity | bool
@@ -20614,6 +21251,8 @@
   - restrict_strategy | bool
   - '"audit" in ansible_facts.packages'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ansible_architecture == "aarch64" or ansible_architecture == "ppc64" or ansible_architecture == "ppc64le" or ansible_architecture
+    == "s390x" or ansible_architecture == "x86_64"
   tags:
   - CCE-80746-1
   - CJIS-5.4.1.1
@@ -20630,7 +21269,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for clock_settime for x86 platform
+- name: Perform remediation of Audit rules for clock_settime for 32bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -20744,7 +21383,7 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Perform remediation of Audit rules for clock_settime for x86_64 platform
+- name: Perform remediation of Audit rules for clock_settime for 64bit platform
   block:
   - name: Declare list of syscalls
     set_fact:
@@ -21582,8 +22221,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
   - CCE-80800-6
@@ -21610,8 +22249,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   - file_exists.stat is defined and file_exists.stat.exists
   tags:
@@ -21623,6 +22262,87 @@
   - PCI-DSS-Req-7.1
   - configure_strategy
   - file_groupowner_grub2_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86009-8
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_groupowner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/grub2/user.cfg
+  stat:
+    path: /boot/grub2/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_groupowner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86009-8
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure group owner 0 on /boot/grub2/user.cfg
+  file:
+    path: /boot/grub2/user.cfg
+    group: '0'
+  when:
+  - configure_strategy | bool
+  - file_groupowner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86009-8
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_user_cfg
   - low_complexity
   - low_disruption
   - medium_severity
@@ -21663,8 +22383,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
   - CCE-80805-5
@@ -21691,8 +22411,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   - file_exists.stat is defined and file_exists.stat.exists
   tags:
@@ -21704,6 +22424,87 @@
   - PCI-DSS-Req-7.1
   - configure_strategy
   - file_owner_grub2_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86015-5
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_owner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/grub2/user.cfg
+  stat:
+    path: /boot/grub2/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_owner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86015-5
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure owner 0 on /boot/grub2/user.cfg
+  file:
+    path: /boot/grub2/user.cfg
+    owner: '0'
+  when:
+  - configure_strategy | bool
+  - file_owner_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86015-5
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_user_cfg
   - low_complexity
   - low_disruption
   - medium_severity
@@ -21742,8 +22543,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
   - CCE-80814-7
@@ -21768,8 +22569,8 @@
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
-  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   - file_exists.stat is defined and file_exists.stat.exists
   tags:
@@ -21779,6 +22580,81 @@
   - NIST-800-53-CM-6(a)
   - configure_strategy
   - file_permissions_grub2_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86024-7
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_permissions_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/grub2/user.cfg
+  stat:
+    path: /boot/grub2/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_permissions_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86024-7
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure permission u-xs,g-xwrs,o-xwrt on /boot/grub2/user.cfg
+  file:
+    path: /boot/grub2/user.cfg
+    mode: u-xs,g-xwrs,o-xwrt
+  when:
+  - configure_strategy | bool
+  - file_permissions_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"grub2-common" in ansible_facts.packages'
+  - '"/boot/efi" not in ansible_mounts | map(attribute="mount") | list'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86024-7
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_user_cfg
   - low_complexity
   - low_disruption
   - medium_severity
@@ -21869,6 +22745,87 @@
   package_facts:
     manager: auto
   tags:
+  - CCE-86012-2
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_groupowner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/efi/EFI/redhat/user.cfg
+  stat:
+    path: /boot/efi/EFI/redhat/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_groupowner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86012-2
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure group owner 0 on /boot/efi/EFI/redhat/user.cfg
+  file:
+    path: /boot/efi/EFI/redhat/user.cfg
+    group: '0'
+  when:
+  - configure_strategy | bool
+  - file_groupowner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86012-2
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_groupowner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
   - CCE-85913-2
   - CJIS-5.5.2.2
   - NIST-800-171-3.4.5
@@ -21950,6 +22907,87 @@
   package_facts:
     manager: auto
   tags:
+  - CCE-86021-3
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_owner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/efi/EFI/redhat/user.cfg
+  stat:
+    path: /boot/efi/EFI/redhat/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_owner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86021-3
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure owner 0 on /boot/efi/EFI/redhat/user.cfg
+  file:
+    path: /boot/efi/EFI/redhat/user.cfg
+    owner: '0'
+  when:
+  - configure_strategy | bool
+  - file_owner_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86021-3
+  - CJIS-5.5.2.2
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-7.1
+  - configure_strategy
+  - file_owner_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
   - CCE-85912-4
   - NIST-800-171-3.4.5
   - NIST-800-53-AC-6(1)
@@ -22016,6 +23054,81 @@
   - NIST-800-53-CM-6(a)
   - configure_strategy
   - file_permissions_efi_grub2_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-86028-8
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  when:
+  - configure_strategy | bool
+  - file_permissions_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+
+- name: Test for existence /boot/efi/EFI/redhat/user.cfg
+  stat:
+    path: /boot/efi/EFI/redhat/user.cfg
+  register: file_exists
+  when:
+  - configure_strategy | bool
+  - file_permissions_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86028-8
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_efi_user_cfg
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
+- name: Ensure permission u-xs,g-xwrs,o-xwrt on /boot/efi/EFI/redhat/user.cfg
+  file:
+    path: /boot/efi/EFI/redhat/user.cfg
+    mode: u-xs,g-xwrs,o-xwrt
+  when:
+  - configure_strategy | bool
+  - file_permissions_efi_user_cfg | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"/boot/efi" in ansible_mounts | map(attribute="mount") | list'
+  - '"grub2-common" in ansible_facts.packages'
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - file_exists.stat is defined and file_exists.stat.exists
+  tags:
+  - CCE-86028-8
+  - NIST-800-171-3.4.5
+  - NIST-800-53-AC-6(1)
+  - NIST-800-53-CM-6(a)
+  - configure_strategy
+  - file_permissions_efi_user_cfg
   - low_complexity
   - low_disruption
   - medium_severity
@@ -22506,6 +23619,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_ra.*$
     patterns: '*.conf'
     file_type: any
@@ -22533,7 +23647,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_all_accept_ra
 
-- name: Comment out any occurrences of net.ipv6.conf.all.accept_ra from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.all.accept_ra from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_ra
@@ -22596,6 +23710,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -22625,7 +23740,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_all_accept_redirects
 
-- name: Comment out any occurrences of net.ipv6.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.all.accept_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_redirects
@@ -22692,6 +23807,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_source_route.*$
     patterns: '*.conf'
     file_type: any
@@ -22719,7 +23835,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_all_accept_source_route
 
-- name: Comment out any occurrences of net.ipv6.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.all.accept_source_route from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_source_route
@@ -22782,6 +23898,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.forwarding.*$
     patterns: '*.conf'
     file_type: any
@@ -22810,7 +23927,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_all_forwarding
 
-- name: Comment out any occurrences of net.ipv6.conf.all.forwarding from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.all.forwarding from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.forwarding
@@ -22875,6 +23992,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_ra.*$
     patterns: '*.conf'
     file_type: any
@@ -22902,7 +24020,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_default_accept_ra
 
-- name: Comment out any occurrences of net.ipv6.conf.default.accept_ra from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.default.accept_ra from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_ra
@@ -22965,6 +24083,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -22992,7 +24111,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_default_accept_redirects
 
-- name: Comment out any occurrences of net.ipv6.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.default.accept_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_redirects
@@ -23055,6 +24174,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_source_route.*$
     patterns: '*.conf'
     file_type: any
@@ -23077,6 +24197,7 @@
   - NIST-800-53-CM-6.1(iv)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23084,7 +24205,7 @@
   - reboot_required
   - sysctl_net_ipv6_conf_default_accept_source_route
 
-- name: Comment out any occurrences of net.ipv6.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv6.conf.default.accept_source_route from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_source_route
@@ -23108,6 +24229,7 @@
   - NIST-800-53-CM-6.1(iv)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23139,6 +24261,7 @@
   - NIST-800-53-CM-6.1(iv)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23151,6 +24274,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -23180,7 +24304,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_all_accept_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.accept_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_redirects
@@ -23247,6 +24371,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_source_route.*$
     patterns: '*.conf'
     file_type: any
@@ -23276,7 +24401,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_all_accept_source_route
 
-- name: Comment out any occurrences of net.ipv4.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.accept_source_route from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_source_route
@@ -23343,6 +24468,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.log_martians.*$
     patterns: '*.conf'
     file_type: any
@@ -23368,7 +24494,7 @@
   - sysctl_net_ipv4_conf_all_log_martians
   - unknown_severity
 
-- name: Comment out any occurrences of net.ipv4.conf.all.log_martians from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.log_martians from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.log_martians
@@ -23427,6 +24553,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.rp_filter.*$
     patterns: '*.conf'
     file_type: any
@@ -23448,6 +24575,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23455,7 +24583,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_all_rp_filter
 
-- name: Comment out any occurrences of net.ipv4.conf.all.rp_filter from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.rp_filter from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.rp_filter
@@ -23478,6 +24606,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23508,6 +24637,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23520,6 +24650,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.secure_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -23539,6 +24670,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23546,7 +24678,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_all_secure_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.all.secure_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.secure_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.secure_redirects
@@ -23567,6 +24699,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23595,6 +24728,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23607,6 +24741,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -23629,6 +24764,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23636,7 +24772,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_default_accept_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.accept_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_redirects
@@ -23660,6 +24796,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23691,6 +24828,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -23703,6 +24841,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_source_route.*$
     patterns: '*.conf'
     file_type: any
@@ -23732,7 +24871,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_default_accept_source_route
 
-- name: Comment out any occurrences of net.ipv4.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.accept_source_route from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_source_route
@@ -23799,6 +24938,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.log_martians.*$
     patterns: '*.conf'
     file_type: any
@@ -23824,7 +24964,7 @@
   - sysctl_net_ipv4_conf_default_log_martians
   - unknown_severity
 
-- name: Comment out any occurrences of net.ipv4.conf.default.log_martians from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.log_martians from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.log_martians
@@ -23883,6 +25023,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.rp_filter.*$
     patterns: '*.conf'
     file_type: any
@@ -23909,7 +25050,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_default_rp_filter
 
-- name: Comment out any occurrences of net.ipv4.conf.default.rp_filter from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.rp_filter from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.rp_filter
@@ -23970,6 +25111,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.secure_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -23996,7 +25138,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_default_secure_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.default.secure_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.secure_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.secure_redirects
@@ -24057,6 +25199,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.icmp_echo_ignore_broadcasts.*$
     patterns: '*.conf'
     file_type: any
@@ -24078,6 +25221,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24085,7 +25229,7 @@
   - reboot_required
   - sysctl_net_ipv4_icmp_echo_ignore_broadcasts
 
-- name: Comment out any occurrences of net.ipv4.icmp_echo_ignore_broadcasts from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.icmp_echo_ignore_broadcasts from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.icmp_echo_ignore_broadcasts
@@ -24108,6 +25252,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24138,6 +25283,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24150,6 +25296,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses.*$
     patterns: '*.conf'
     file_type: any
@@ -24168,6 +25315,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24175,7 +25323,7 @@
   - sysctl_net_ipv4_icmp_ignore_bogus_error_responses
   - unknown_severity
 
-- name: Comment out any occurrences of net.ipv4.icmp_ignore_bogus_error_responses from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.icmp_ignore_bogus_error_responses from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses
@@ -24195,6 +25343,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24222,6 +25371,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
+  - PCI-DSS-Req-1.4.3
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24234,6 +25384,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.tcp_syncookies.*$
     patterns: '*.conf'
     file_type: any
@@ -24256,6 +25407,7 @@
   - NIST-800-53-SC-5(1)
   - NIST-800-53-SC-5(2)
   - NIST-800-53-SC-5(3)(a)
+  - PCI-DSS-Req-1.4.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24263,7 +25415,7 @@
   - reboot_required
   - sysctl_net_ipv4_tcp_syncookies
 
-- name: Comment out any occurrences of net.ipv4.tcp_syncookies from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.tcp_syncookies from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.tcp_syncookies
@@ -24287,6 +25439,7 @@
   - NIST-800-53-SC-5(1)
   - NIST-800-53-SC-5(2)
   - NIST-800-53-SC-5(3)(a)
+  - PCI-DSS-Req-1.4.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24318,6 +25471,7 @@
   - NIST-800-53-SC-5(1)
   - NIST-800-53-SC-5(2)
   - NIST-800-53-SC-5(3)(a)
+  - PCI-DSS-Req-1.4.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24330,6 +25484,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.send_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -24360,7 +25515,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_all_send_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.all.send_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.all.send_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.send_redirects
@@ -24429,6 +25584,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.send_redirects.*$
     patterns: '*.conf'
     file_type: any
@@ -24459,7 +25615,7 @@
   - reboot_required
   - sysctl_net_ipv4_conf_default_send_redirects
 
-- name: Comment out any occurrences of net.ipv4.conf.default.send_redirects from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.conf.default.send_redirects from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.send_redirects
@@ -24528,6 +25684,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*net.ipv4.ip_forward.*$
     patterns: '*.conf'
     file_type: any
@@ -24548,6 +25705,8 @@
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.3.1
+  - PCI-DSS-Req-1.3.2
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24555,7 +25714,7 @@
   - reboot_required
   - sysctl_net_ipv4_ip_forward
 
-- name: Comment out any occurrences of net.ipv4.ip_forward from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of net.ipv4.ip_forward from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.ip_forward
@@ -24577,6 +25736,8 @@
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.3.1
+  - PCI-DSS-Req-1.3.2
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24606,6 +25767,8 @@
   - NIST-800-53-CM-7(b)
   - NIST-800-53-SC-5
   - NIST-800-53-SC-7(a)
+  - PCI-DSS-Req-1.3.1
+  - PCI-DSS-Req-1.3.2
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -24634,6 +25797,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.2
   - disable_strategy
   - kernel_module_dccp_disabled
   - low_complexity
@@ -24662,6 +25826,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.2
   - disable_strategy
   - kernel_module_dccp_disabled
   - low_complexity
@@ -24692,6 +25857,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.2
   - disable_strategy
   - kernel_module_sctp_disabled
   - low_complexity
@@ -24722,6 +25888,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-1.4.2
   - disable_strategy
   - kernel_module_sctp_disabled
   - low_complexity
@@ -24729,8 +25896,9 @@
   - medium_severity
   - reboot_required
 
-- name: Deactivate Wireless Network Interfaces
-  command: nmcli radio wifi off
+- name: Gather the package facts
+  package_facts:
+    manager: auto
   tags:
   - CCE-83501-7
   - DISA-STIG-RHEL-08-040110
@@ -24741,6 +25909,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-MP-7
+  - PCI-DSS-Req-1.3.3
   - low_complexity
   - medium_disruption
   - medium_severity
@@ -24755,6 +25924,94 @@
   - no_reboot_needed | bool
   - unknown_strategy | bool
   - wireless_disable_interfaces | bool
+
+- name: Check if NetworkManager is installed
+  ansible.builtin.package_facts:
+    manager: auto
+  tags:
+  - CCE-83501-7
+  - DISA-STIG-RHEL-08-040110
+  - NIST-800-171-3.1.16
+  - NIST-800-53-AC-18(3)
+  - NIST-800-53-AC-18(a)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - NIST-800-53-MP-7
+  - PCI-DSS-Req-1.3.3
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  - wireless_disable_interfaces
+  when:
+  - DISA_STIG_RHEL_08_040110 | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - wireless_disable_interfaces | bool
+
+- name: Error message when NetworkManager not installed
+  fail:
+    msg: NetworkManager package not installed
+  when:
+  - DISA_STIG_RHEL_08_040110 | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - wireless_disable_interfaces | bool
+  - '''NetworkManager'' not in ansible_facts.packages'
+  tags:
+  - CCE-83501-7
+  - DISA-STIG-RHEL-08-040110
+  - NIST-800-171-3.1.16
+  - NIST-800-53-AC-18(3)
+  - NIST-800-53-AC-18(a)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - NIST-800-53-MP-7
+  - PCI-DSS-Req-1.3.3
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  - wireless_disable_interfaces
+
+- name: Deactivate Wireless Network Interfaces
+  command: nmcli radio wifi off
+  when:
+  - DISA_STIG_RHEL_08_040110 | bool
+  - low_complexity | bool
+  - medium_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - unknown_strategy | bool
+  - wireless_disable_interfaces | bool
+  - '''NetworkManager'' in ansible_facts.packages'
+  tags:
+  - CCE-83501-7
+  - DISA-STIG-RHEL-08-040110
+  - NIST-800-171-3.1.16
+  - NIST-800-53-AC-18(3)
+  - NIST-800-53-AC-18(a)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-CM-7(a)
+  - NIST-800-53-CM-7(b)
+  - NIST-800-53-MP-7
+  - PCI-DSS-Req-1.3.3
+  - low_complexity
+  - medium_disruption
+  - medium_severity
+  - no_reboot_needed
+  - unknown_strategy
+  - wireless_disable_interfaces
 
 - name: Get all world-writable directories with no sticky bits set
   shell: 'set -o pipefail
@@ -25935,8 +27192,6 @@
 
 - name: Unit Socket Exists - autofs.socket
   command: systemctl list-unit-files autofs.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -26712,6 +27967,135 @@
   - mount_option_dev_shm_nosuid
   - no_reboot_needed
 
+- name: 'Add grpquota Option to /home: Check information associated to mountpoint'
+  command: findmnt --fstab '/home'
+  register: device_name
+  failed_when: device_name.rc > 1
+  changed_when: false
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_grpquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86039-5
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_grpquota
+  - no_reboot_needed
+
+- name: 'Add grpquota Option to /home: Create mount_info dictionary variable'
+  set_fact:
+    mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+  with_together:
+  - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+  - '{{ device_name.stdout_lines[1].split() | list }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_grpquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - device_name.stdout is defined and device_name.stdout_lines is defined
+  - (device_name.stdout | length > 0)
+  tags:
+  - CCE-86039-5
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_grpquota
+  - no_reboot_needed
+
+- name: 'Add grpquota Option to /home: If /home not mounted, craft mount_info manually'
+  set_fact:
+    mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+  with_together:
+  - - target
+    - source
+    - fstype
+    - options
+  - - /home
+    - ''
+    - ''
+    - defaults
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_grpquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ("--fstab" | length == 0)
+  - (device_name.stdout | length == 0)
+  tags:
+  - CCE-86039-5
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_grpquota
+  - no_reboot_needed
+
+- name: 'Add grpquota Option to /home: Make sure grpquota option is part of the to /home options'
+  set_fact:
+    mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',grpquota'' }) }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_grpquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - mount_info is defined and "grpquota" not in mount_info.options
+  tags:
+  - CCE-86039-5
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_grpquota
+  - no_reboot_needed
+
+- name: 'Add grpquota Option to /home: Ensure /home is mounted with grpquota option'
+  mount:
+    path: /home
+    src: '{{ mount_info.source }}'
+    opts: '{{ mount_info.options }}'
+    state: mounted
+    fstype: '{{ mount_info.fstype }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_grpquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("--fstab" | length == 0)
+  tags:
+  - CCE-86039-5
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_grpquota
+  - no_reboot_needed
+
 - name: 'Add nodev Option to /home: Check information associated to mountpoint'
   command: findmnt --fstab '/home'
   register: device_name
@@ -26998,6 +28382,135 @@
   - low_complexity
   - medium_severity
   - mount_option_home_nosuid
+  - no_reboot_needed
+
+- name: 'Add usrquota Option to /home: Check information associated to mountpoint'
+  command: findmnt --fstab '/home'
+  register: device_name
+  failed_when: device_name.rc > 1
+  changed_when: false
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_usrquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-86035-3
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_usrquota
+  - no_reboot_needed
+
+- name: 'Add usrquota Option to /home: Create mount_info dictionary variable'
+  set_fact:
+    mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+  with_together:
+  - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+  - '{{ device_name.stdout_lines[1].split() | list }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_usrquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - device_name.stdout is defined and device_name.stdout_lines is defined
+  - (device_name.stdout | length > 0)
+  tags:
+  - CCE-86035-3
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_usrquota
+  - no_reboot_needed
+
+- name: 'Add usrquota Option to /home: If /home not mounted, craft mount_info manually'
+  set_fact:
+    mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+  with_together:
+  - - target
+    - source
+    - fstype
+    - options
+  - - /home
+    - ''
+    - ''
+    - defaults
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_usrquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ("--fstab" | length == 0)
+  - (device_name.stdout | length == 0)
+  tags:
+  - CCE-86035-3
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_usrquota
+  - no_reboot_needed
+
+- name: 'Add usrquota Option to /home: Make sure usrquota option is part of the to /home options'
+  set_fact:
+    mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',usrquota'' }) }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_usrquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - mount_info is defined and "usrquota" not in mount_info.options
+  tags:
+  - CCE-86035-3
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_usrquota
+  - no_reboot_needed
+
+- name: 'Add usrquota Option to /home: Ensure /home is mounted with usrquota option'
+  mount:
+    path: /home
+    src: '{{ mount_info.source }}'
+    opts: '{{ mount_info.options }}'
+    state: mounted
+    fstype: '{{ mount_info.fstype }}'
+  when:
+  - configure_strategy | bool
+  - high_disruption | bool
+  - low_complexity | bool
+  - medium_severity | bool
+  - mount_option_home_usrquota | bool
+  - no_reboot_needed | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("--fstab" | length == 0)
+  tags:
+  - CCE-86035-3
+  - NIST-800-53-CM-6(b)
+  - configure_strategy
+  - high_disruption
+  - low_complexity
+  - medium_severity
+  - mount_option_home_usrquota
   - no_reboot_needed
 
 - name: 'Add nodev Option to /tmp: Check information associated to mountpoint'
@@ -29403,6 +30916,7 @@
     paths:
     - /etc/sysctl.d/
     - /run/sysctl.d/
+    - /usr/local/lib/sysctl.d/
     contains: ^[\s]*kernel.randomize_va_space.*$
     patterns: '*.conf'
     file_type: any
@@ -29423,6 +30937,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-30
   - NIST-800-53-SC-30(2)
+  - PCI-DSS-Req-2.2.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -29430,7 +30945,7 @@
   - reboot_required
   - sysctl_kernel_randomize_va_space
 
-- name: Comment out any occurrences of kernel.randomize_va_space from /etc/sysctl.d/*.conf files
+- name: Comment out any occurrences of kernel.randomize_va_space from config files
   replace:
     path: '{{ item.path }}'
     regexp: ^[\s]*kernel.randomize_va_space
@@ -29452,6 +30967,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-30
   - NIST-800-53-SC-30(2)
+  - PCI-DSS-Req-2.2.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -29481,6 +30997,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-SC-30
   - NIST-800-53-SC-30(2)
+  - PCI-DSS-Req-2.2.1
   - disable_strategy
   - low_complexity
   - medium_disruption
@@ -29551,12 +31068,35 @@
   - no_reboot_needed
   - package_setroubleshoot_removed
 
-- name: Find /etc/grub.d/ files
-  find:
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+  - CCE-80827-9
+  - NIST-800-171-3.1.2
+  - NIST-800-171-3.7.2
+  - NIST-800-53-AC-3
+  - NIST-800-53-AC-3(3)(a)
+  - grub2_enable_selinux
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+  when:
+  - grub2_enable_selinux | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Find /etc/grub.d/ files
+  ansible.builtin.find:
     paths:
     - /etc/grub.d/
     follow: true
-  register: grub
+  register: result_grub_d
   when:
   - grub2_enable_selinux | bool
   - low_complexity | bool
@@ -29565,6 +31105,7 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
   tags:
   - CCE-80827-9
   - NIST-800-171-3.1.2
@@ -29578,14 +31119,12 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Ensure SELinux Not Disabled in grub files
-  replace:
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Ensure SELinux Not Disabled in /etc/grub.d/ files
+  ansible.builtin.replace:
     dest: '{{ item.path }}'
     regexp: (selinux|enforcing)=0
   with_items:
-  - '{{ grub.files }}'
-  - path: /etc/grub2.cfg
-  - path: /etc/default/grub
+  - '{{ result_grub_d.files }}'
   when:
   - grub2_enable_selinux | bool
   - low_complexity | bool
@@ -29594,6 +31133,113 @@
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
+  tags:
+  - CCE-80827-9
+  - NIST-800-171-3.1.2
+  - NIST-800-171-3.7.2
+  - NIST-800-53-AC-3
+  - NIST-800-53-AC-3(3)(a)
+  - grub2_enable_selinux
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Check if /etc/grub2.cfg exists
+  ansible.builtin.stat:
+    path: /etc/grub2.cfg
+  register: result_grub2_cfg_present
+  when:
+  - grub2_enable_selinux | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
+  tags:
+  - CCE-80827-9
+  - NIST-800-171-3.1.2
+  - NIST-800-171-3.7.2
+  - NIST-800-53-AC-3
+  - NIST-800-53-AC-3(3)(a)
+  - grub2_enable_selinux
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Check if /etc/default/grub exists
+  ansible.builtin.stat:
+    path: /etc/default/grub
+  register: result_default_grub_present
+  when:
+  - grub2_enable_selinux | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
+  tags:
+  - CCE-80827-9
+  - NIST-800-171-3.1.2
+  - NIST-800-171-3.7.2
+  - NIST-800-53-AC-3
+  - NIST-800-53-AC-3(3)(a)
+  - grub2_enable_selinux
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Ensure SELinux Not Disabled in /etc/grub2.cfg
+  ansible.builtin.replace:
+    dest: /etc/grub2.cfg
+    regexp: (selinux|enforcing)=0
+  when:
+  - grub2_enable_selinux | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
+  - result_grub2_cfg_present.stat.exists
+  tags:
+  - CCE-80827-9
+  - NIST-800-171-3.1.2
+  - NIST-800-171-3.7.2
+  - NIST-800-53-AC-3
+  - NIST-800-53-AC-3(3)(a)
+  - grub2_enable_selinux
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+  - restrict_strategy
+
+- name: Ensure SELinux Not Disabled in /etc/default/grub - Ensure SELinux Not Disabled in /etc/default/grub
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: (selinux|enforcing)=0
+  when:
+  - grub2_enable_selinux | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - '"grub2-common" in ansible_facts.packages'
+  - result_default_grub_present.stat.exists
   tags:
   - CCE-80827-9
   - NIST-800-171-3.1.2
@@ -29684,9 +31330,9 @@
       state: present
   when:
   - DISA_STIG_RHEL_08_010170 | bool
+  - high_severity | bool
   - low_complexity | bool
   - low_disruption | bool
-  - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - selinux_state | bool
@@ -29700,9 +31346,9 @@
   - NIST-800-53-AC-3(3)(a)
   - NIST-800-53-AU-9
   - NIST-800-53-SC-7(21)
+  - high_severity
   - low_complexity
   - low_disruption
-  - medium_severity
   - no_reboot_needed
   - restrict_strategy
   - selinux_state
@@ -30518,6 +32164,7 @@
   - NIST-800-53-CM-7.1(ii)
   - NIST-800-53-IA-5(1)(c)
   - NIST-800-53-IA-5(1).1(v)
+  - PCI-DSS-Req-2.2.4
   - disable_strategy
   - high_severity
   - low_complexity
@@ -30582,6 +32229,7 @@
     state: absent
   tags:
   - CCE-82885-5
+  - PCI-DSS-Req-2.2.4
   - disable_strategy
   - low_complexity
   - low_disruption
@@ -30607,11 +32255,13 @@
   - postfix_network_listening_disabled | bool
   - restrict_strategy | bool
   - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  - ''
   tags:
   - CCE-82174-4
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-2.2.4
   - low_complexity
   - low_disruption
   - medium_severity
@@ -30642,6 +32292,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-2.2.4
   - low_complexity
   - low_disruption
   - medium_severity
@@ -30680,8 +32331,6 @@
 
 - name: Unit Socket Exists - nfs-server.socket
   command: systemctl list-unit-files nfs-server.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -30932,6 +32581,7 @@
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
   - NIST-800-53-IA-5(1)(c)
+  - PCI-DSS-Req-2.2.4
   - disable_strategy
   - high_severity
   - low_complexity
@@ -31038,6 +32688,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-2.2.4
   - disable_strategy
   - high_severity
   - low_complexity
@@ -31349,6 +33000,7 @@
   - NIST-800-53-AC-17(a)
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-2.2.6
   - configure_strategy
   - file_permissions_sshd_pub_key
   - low_complexity
@@ -31380,6 +33032,7 @@
   - NIST-800-53-AC-17(a)
   - NIST-800-53-AC-6(1)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-2.2.6
   - configure_strategy
   - file_permissions_sshd_pub_key
   - low_complexity
@@ -31415,6 +33068,7 @@
       insertbefore: ^[#\s]*Match
       validate: /usr/sbin/sshd -t -f %s
   when:
+  - DISA_STIG_RHEL_08_010200 | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
@@ -31425,6 +33079,7 @@
   tags:
   - CCE-80907-9
   - CJIS-5.5.6
+  - DISA-STIG-RHEL-08-010200
   - NIST-800-171-3.1.11
   - NIST-800-53-AC-12
   - NIST-800-53-AC-17(a)
@@ -31439,7 +33094,7 @@
   - restrict_strategy
   - sshd_set_keepalive
 
-- name: Set SSH Idle Timeout Interval
+- name: Set SSH Client Alive Interval
   block:
   - name: Check for duplicate values
     lineinfile:
@@ -31592,6 +33247,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-2.2.6
   - high_severity
   - low_complexity
   - low_disruption
@@ -31698,6 +33354,7 @@
   - NIST-800-53-CM-7(b)
   - NIST-800-53-IA-2
   - NIST-800-53-IA-2(5)
+  - PCI-DSS-Req-2.2.6
   - low_complexity
   - low_disruption
   - medium_severity
@@ -31841,6 +33498,7 @@
   - NIST-800-53-CM-6(a)
   - NIST-800-53-CM-7(a)
   - NIST-800-53-CM-7(b)
+  - PCI-DSS-Req-2.2.6
   - low_complexity
   - low_disruption
   - medium_severity
@@ -31976,6 +33634,7 @@
   - NIST-800-53-AC-17(1)
   - NIST-800-53-AC-17(a)
   - NIST-800-53-CM-6(a)
+  - PCI-DSS-Req-2.2.6
   - low_complexity
   - low_disruption
   - medium_severity
