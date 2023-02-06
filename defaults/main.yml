@@ -6,7 +6,7 @@ var_sudo_timestamp_timeout: '5'
 var_authselect_profile: sssd
 login_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
 var_password_pam_remember: '5'
-var_password_pam_remember_control_flag: required
+var_password_pam_remember_control_flag: requisite
 var_accounts_passwords_pam_faillock_deny: '3'
 var_accounts_passwords_pam_faillock_unlock_time: '900'
 var_password_pam_minclass: '4'
@@ -54,6 +54,7 @@ sshd_max_auth_tries_value: '4'
 var_sshd_max_sessions: '10'
 var_sshd_set_maxstartups: 10:30:60
 DISA_STIG_RHEL_08_010020: true
+DISA_STIG_RHEL_08_010040: true
 DISA_STIG_RHEL_08_010049: true
 DISA_STIG_RHEL_08_010050: true
 DISA_STIG_RHEL_08_010060: true
@@ -72,6 +73,7 @@ DISA_STIG_RHEL_08_010384: true
 DISA_STIG_RHEL_08_010430: true
 DISA_STIG_RHEL_08_010450: true
 DISA_STIG_RHEL_08_010480: true
+DISA_STIG_RHEL_08_010490: true
 DISA_STIG_RHEL_08_010550: true
 DISA_STIG_RHEL_08_010561: true
 DISA_STIG_RHEL_08_010570: true
@@ -81,7 +83,7 @@ DISA_STIG_RHEL_08_010730: true
 DISA_STIG_RHEL_08_010740: true
 DISA_STIG_RHEL_08_010750: true
 DISA_STIG_RHEL_08_010830: true
-DISA_STIG_RHEL_08_020010: true
+DISA_STIG_RHEL_08_020011: true
 DISA_STIG_RHEL_08_020016: true
 DISA_STIG_RHEL_08_020032: true
 DISA_STIG_RHEL_08_020104: true
@@ -96,6 +98,7 @@ DISA_STIG_RHEL_08_020260: true
 DISA_STIG_RHEL_08_020330: true
 DISA_STIG_RHEL_08_020351: true
 DISA_STIG_RHEL_08_020353: true
+DISA_STIG_RHEL_08_030000: true
 DISA_STIG_RHEL_08_030020: true
 DISA_STIG_RHEL_08_030121: true
 DISA_STIG_RHEL_08_030130: true
@@ -106,13 +109,17 @@ DISA_STIG_RHEL_08_030170: true
 DISA_STIG_RHEL_08_030180: true
 DISA_STIG_RHEL_08_030181: true
 DISA_STIG_RHEL_08_030200: true
+DISA_STIG_RHEL_08_030260: true
 DISA_STIG_RHEL_08_030302: true
+DISA_STIG_RHEL_08_030330: true
 DISA_STIG_RHEL_08_030360: true
 DISA_STIG_RHEL_08_030361: true
 DISA_STIG_RHEL_08_030390: true
 DISA_STIG_RHEL_08_030420: true
 DISA_STIG_RHEL_08_030480: true
 DISA_STIG_RHEL_08_030490: true
+DISA_STIG_RHEL_08_030560: true
+DISA_STIG_RHEL_08_030570: true
 DISA_STIG_RHEL_08_030590: true
 DISA_STIG_RHEL_08_030600: true
 DISA_STIG_RHEL_08_030601: true
@@ -193,6 +200,9 @@ audit_rules_dac_modification_lremovexattr: true
 audit_rules_dac_modification_lsetxattr: true
 audit_rules_dac_modification_removexattr: true
 audit_rules_dac_modification_setxattr: true
+audit_rules_execution_chacl: true
+audit_rules_execution_chcon: true
+audit_rules_execution_setfacl: true
 audit_rules_file_deletion_events_rename: true
 audit_rules_file_deletion_events_renameat: true
 audit_rules_file_deletion_events_unlink: true
@@ -205,10 +215,13 @@ audit_rules_login_events_lastlog: true
 audit_rules_mac_modification: true
 audit_rules_media_export: true
 audit_rules_networkconfig_modification: true
+audit_rules_privileged_commands_usermod: true
 audit_rules_session_events: true
+audit_rules_suid_privilege_function: true
 audit_rules_sysadmin_actions: true
 audit_rules_time_adjtimex: true
 audit_rules_time_clock_settime: true
+audit_rules_time_settimeofday: true
 audit_rules_time_stime: true
 audit_rules_time_watch_localtime: true
 audit_rules_unsuccessful_file_modification_creat: true
@@ -221,6 +234,7 @@ audit_rules_usergroup_modification_gshadow: true
 audit_rules_usergroup_modification_opasswd: true
 audit_rules_usergroup_modification_passwd: true
 audit_rules_usergroup_modification_shadow: true
+audit_sudo_log_events: true
 auditd_data_retention_action_mail_acct: true
 auditd_data_retention_admin_space_left_action: true
 auditd_data_retention_max_log_file: true
@@ -322,6 +336,7 @@ file_permissions_etc_shadow: true
 file_permissions_grub2_cfg: true
 file_permissions_home_directories: true
 file_permissions_sshd_config: true
+file_permissions_sshd_private_key: true
 file_permissions_sshd_pub_key: true
 file_permissions_user_cfg: true
 gnome_gdm_disable_xdmcp: true
@@ -371,14 +386,19 @@ no_reboot_needed: true
 no_rsh_trust_files: true
 package_aide_installed: true
 package_audit_installed: true
+package_bind_removed: true
+package_cups_removed: true
+package_dhcp_removed: true
 package_dovecot_removed: true
 package_firewalld_installed: true
 package_httpd_removed: true
 package_libselinux_installed: true
 package_mcstrans_removed: true
 package_net_snmp_removed: true
+package_nftables_installed: true
 package_openldap_clients_removed: true
 package_rsh_removed: true
+package_rsync_removed: true
 package_rsyslog_installed: true
 package_samba_removed: true
 package_setroubleshoot_removed: true
@@ -407,6 +427,7 @@ service_autofs_disabled: true
 service_crond_enabled: true
 service_firewalld_enabled: true
 service_nfs_disabled: true
+service_rpcbind_disabled: true
 service_rsyslog_enabled: true
 service_systemd_journald_enabled: true
 set_password_hashing_algorithm_passwordauth: true
@@ -418,6 +439,7 @@ sshd_disable_tcp_forwarding: true
 sshd_disable_x11_forwarding: true
 sshd_do_not_permit_user_env: true
 sshd_enable_pam: true
+sshd_enable_warning_banner: true
 sshd_set_idle_timeout: true
 sshd_set_keepalive: true
 sshd_set_login_grace_time: true
