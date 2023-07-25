@@ -5,6 +5,8 @@ var_sudo_logfile: /var/log/sudo.log
 var_sudo_timestamp_timeout: '5'
 var_authselect_profile: sssd
 login_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
+remote_login_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
+motd_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
 var_password_pam_remember: '5'
 var_password_pam_remember_control_flag: requisite,required
 var_accounts_passwords_pam_faillock_deny: '3'
@@ -44,6 +46,8 @@ sysctl_net_ipv4_conf_default_secure_redirects_value: '0'
 sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value: '1'
 sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value: '1'
 sysctl_net_ipv4_tcp_syncookies_value: '1'
+var_nftables_family: inet
+var_nftables_table: firewalld
 var_selinux_policy_name: targeted
 var_selinux_state: enforcing
 var_postfix_inet_interfaces: loopback-only
@@ -122,6 +126,7 @@ DISA_STIG_RHEL_08_030480: true
 DISA_STIG_RHEL_08_030490: true
 DISA_STIG_RHEL_08_030560: true
 DISA_STIG_RHEL_08_030570: true
+DISA_STIG_RHEL_08_030580: true
 DISA_STIG_RHEL_08_030590: true
 DISA_STIG_RHEL_08_030600: true
 DISA_STIG_RHEL_08_030601: true
@@ -189,6 +194,7 @@ accounts_umask_etc_bashrc: true
 accounts_umask_etc_login_defs: true
 accounts_umask_etc_profile: true
 accounts_user_interactive_home_directory_exists: true
+accounts_users_netrc_file_permissions: true
 aide_build_database: true
 aide_periodic_cron_checking: true
 audit_rules_dac_modification_chmod: true
@@ -212,14 +218,19 @@ audit_rules_file_deletion_events_renameat: true
 audit_rules_file_deletion_events_unlink: true
 audit_rules_file_deletion_events_unlinkat: true
 audit_rules_immutable: true
+audit_rules_kernel_module_loading_create: true
 audit_rules_kernel_module_loading_delete: true
+audit_rules_kernel_module_loading_finit: true
 audit_rules_kernel_module_loading_init: true
+audit_rules_kernel_module_loading_query: true
 audit_rules_login_events_faillock: true
 audit_rules_login_events_lastlog: true
 audit_rules_mac_modification: true
 audit_rules_mac_modification_usr_share: true
 audit_rules_media_export: true
 audit_rules_networkconfig_modification: true
+audit_rules_privileged_commands: true
+audit_rules_privileged_commands_kmod: true
 audit_rules_privileged_commands_usermod: true
 audit_rules_session_events: true
 audit_rules_suid_privilege_function: true
@@ -317,6 +328,8 @@ file_owner_grub2_cfg: true
 file_owner_sshd_config: true
 file_owner_user_cfg: true
 file_ownership_home_directories: true
+file_ownership_sshd_private_key: true
+file_ownership_sshd_pub_key: true
 file_permissions_at_allow: true
 file_permissions_backup_etc_group: true
 file_permissions_backup_etc_gshadow: true
@@ -388,8 +401,10 @@ mount_option_var_tmp_noexec: true
 mount_option_var_tmp_nosuid: true
 no_empty_passwords: true
 no_empty_passwords_etc_shadow: true
+no_password_auth_for_systemaccounts: true
 no_reboot_needed: true
 no_rsh_trust_files: true
+no_shelllogin_for_systemaccounts: true
 package_aide_installed: true
 package_audit_installed: true
 package_avahi_autoipd_removed: true
@@ -431,6 +446,8 @@ require_singleuser_auth: true
 restrict_strategy: true
 rsyslog_filecreatemode: true
 rsyslog_files_permissions: true
+rsyslog_nolisten: true
+selinux_not_disabled: true
 selinux_policytype: true
 selinux_state: true
 service_auditd_enabled: true
@@ -438,9 +455,11 @@ service_autofs_disabled: true
 service_crond_enabled: true
 service_firewalld_enabled: true
 service_nfs_disabled: true
+service_nftables_disabled: true
 service_rpcbind_disabled: true
 service_rsyslog_enabled: true
 service_systemd_journald_enabled: true
+set_nftables_table: true
 set_password_hashing_algorithm_logindefs: true
 set_password_hashing_algorithm_passwordauth: true
 set_password_hashing_algorithm_systemauth: true
