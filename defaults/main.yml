@@ -63,6 +63,7 @@ DISA_STIG_RHEL_08_010049: true
 DISA_STIG_RHEL_08_010050: true
 DISA_STIG_RHEL_08_010060: true
 DISA_STIG_RHEL_08_010110: true
+DISA_STIG_RHEL_08_010121: true
 DISA_STIG_RHEL_08_010151: true
 DISA_STIG_RHEL_08_010152: true
 DISA_STIG_RHEL_08_010159: true
@@ -89,10 +90,11 @@ DISA_STIG_RHEL_08_010740: true
 DISA_STIG_RHEL_08_010750: true
 DISA_STIG_RHEL_08_010830: true
 DISA_STIG_RHEL_08_020011: true
-DISA_STIG_RHEL_08_020016: true
+DISA_STIG_RHEL_08_020015: true
 DISA_STIG_RHEL_08_020032: true
 DISA_STIG_RHEL_08_020104: true
 DISA_STIG_RHEL_08_020160: true
+DISA_STIG_RHEL_08_020180: true
 DISA_STIG_RHEL_08_020190: true
 DISA_STIG_RHEL_08_020200: true
 DISA_STIG_RHEL_08_020210: true
@@ -104,7 +106,6 @@ DISA_STIG_RHEL_08_020330: true
 DISA_STIG_RHEL_08_020331: true
 DISA_STIG_RHEL_08_020351: true
 DISA_STIG_RHEL_08_020353: true
-DISA_STIG_RHEL_08_030000: true
 DISA_STIG_RHEL_08_030020: true
 DISA_STIG_RHEL_08_030121: true
 DISA_STIG_RHEL_08_030130: true
@@ -157,6 +158,7 @@ DISA_STIG_RHEL_08_040132: true
 DISA_STIG_RHEL_08_040133: true
 DISA_STIG_RHEL_08_040134: true
 DISA_STIG_RHEL_08_040190: true
+DISA_STIG_RHEL_08_040200: true
 DISA_STIG_RHEL_08_040209: true
 DISA_STIG_RHEL_08_040210: true
 DISA_STIG_RHEL_08_040220: true
@@ -177,12 +179,14 @@ DISA_STIG_RHEL_08_040360: true
 account_disable_post_pw_expiration: true
 accounts_maximum_age_login_defs: true
 accounts_minimum_age_login_defs: true
+accounts_no_uid_except_zero: true
 accounts_password_pam_minclass: true
 accounts_password_pam_minlen: true
 accounts_password_pam_pwhistory_remember_password_auth: true
 accounts_password_pam_pwhistory_remember_system_auth: true
 accounts_password_pam_retry: true
 accounts_password_set_max_life_existing: true
+accounts_password_set_min_life_existing: true
 accounts_password_set_warn_age_existing: true
 accounts_password_warn_age_login_defs: true
 accounts_passwords_pam_faillock_deny: true
@@ -233,7 +237,7 @@ audit_rules_privileged_commands: true
 audit_rules_privileged_commands_kmod: true
 audit_rules_privileged_commands_usermod: true
 audit_rules_session_events: true
-audit_rules_suid_privilege_function: true
+audit_rules_suid_auid_privilege_function: true
 audit_rules_sysadmin_actions: true
 audit_rules_time_adjtimex: true
 audit_rules_time_clock_settime: true
@@ -266,6 +270,7 @@ configure_ssh_crypto_policy: true
 configure_strategy: true
 coredump_disable_backtraces: true
 coredump_disable_storage: true
+dconf_db_up_to_date: true
 dconf_gnome_banner_enabled: true
 dconf_gnome_disable_automount: true
 dconf_gnome_disable_automount_open: true
@@ -304,6 +309,8 @@ file_groupowner_grub2_cfg: true
 file_groupowner_sshd_config: true
 file_groupowner_user_cfg: true
 file_groupownership_home_directories: true
+file_groupownership_sshd_private_key: true
+file_groupownership_sshd_pub_key: true
 file_owner_backup_etc_group: true
 file_owner_backup_etc_gshadow: true
 file_owner_backup_etc_passwd: true
@@ -416,6 +423,7 @@ package_dhcp_removed: true
 package_dovecot_removed: true
 package_firewalld_installed: true
 package_httpd_removed: true
+package_iptables_services_removed: true
 package_libselinux_installed: true
 package_mcstrans_removed: true
 package_net_snmp_removed: true
@@ -508,5 +516,4 @@ sysctl_net_ipv6_conf_default_accept_redirects: true
 sysctl_net_ipv6_conf_default_accept_source_route: true
 unknown_severity: true
 unknown_strategy: true
-use_pam_wheel_for_su: true
 wireless_disable_interfaces: true
