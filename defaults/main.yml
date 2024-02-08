@@ -19,8 +19,10 @@ var_account_disable_post_pw_expiration: '30'
 var_accounts_maximum_age_login_defs: '365'
 var_accounts_minimum_age_login_defs: '7'
 var_accounts_password_warn_age_login_defs: '7'
+var_pam_wheel_group_for_su: sugroup
 var_accounts_tmout: '900'
 var_accounts_user_umask: '027'
+var_accounts_passwords_pam_faillock_dir: /var/run/faillock
 var_auditd_action_mail_acct: root
 var_auditd_admin_space_left_action: halt
 var_auditd_max_log_file: '6'
@@ -90,6 +92,7 @@ DISA_STIG_RHEL_08_010740: true
 DISA_STIG_RHEL_08_010750: true
 DISA_STIG_RHEL_08_010830: true
 DISA_STIG_RHEL_08_020011: true
+DISA_STIG_RHEL_08_020014: true
 DISA_STIG_RHEL_08_020015: true
 DISA_STIG_RHEL_08_020032: true
 DISA_STIG_RHEL_08_020104: true
@@ -104,6 +107,7 @@ DISA_STIG_RHEL_08_020230: true
 DISA_STIG_RHEL_08_020260: true
 DISA_STIG_RHEL_08_020330: true
 DISA_STIG_RHEL_08_020331: true
+DISA_STIG_RHEL_08_020332: true
 DISA_STIG_RHEL_08_020351: true
 DISA_STIG_RHEL_08_020353: true
 DISA_STIG_RHEL_08_030020: true
@@ -282,6 +286,7 @@ disable_strategy: true
 enable_authselect: true
 enable_strategy: true
 ensure_gpgcheck_globally_activated: true
+ensure_pam_wheel_group_empty: true
 file_at_deny_not_exist: true
 file_cron_deny_not_exist: true
 file_groupowner_at_allow: true
@@ -516,4 +521,5 @@ sysctl_net_ipv6_conf_default_accept_redirects: true
 sysctl_net_ipv6_conf_default_accept_source_route: true
 unknown_severity: true
 unknown_strategy: true
+use_pam_wheel_group_for_su: true
 wireless_disable_interfaces: true
