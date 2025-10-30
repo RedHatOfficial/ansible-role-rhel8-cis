@@ -263,7 +263,9 @@ audit_rules_networkconfig_modification_network_scripts: true
 audit_rules_privileged_commands: true
 audit_rules_privileged_commands_kmod: true
 audit_rules_privileged_commands_usermod: true
-audit_rules_session_events: true
+audit_rules_session_events_btmp: true
+audit_rules_session_events_utmp: true
+audit_rules_session_events_wtmp: true
 audit_rules_suid_auid_privilege_function: true
 audit_rules_sysadmin_actions: true
 audit_rules_time_adjtimex: true
