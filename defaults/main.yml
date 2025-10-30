@@ -18,6 +18,7 @@ var_password_pam_difok: '2'
 var_password_pam_maxrepeat: '3'
 var_password_pam_minclass: '4'
 var_password_pam_minlen: '14'
+var_password_hashing_algorithm_pam: sha512
 var_password_hashing_algorithm: SHA512
 var_account_disable_post_pw_expiration: '30'
 var_accounts_maximum_age_login_defs: '365'
@@ -470,10 +471,8 @@ no_rsh_trust_files: true
 no_shelllogin_for_systemaccounts: true
 package_aide_installed: true
 package_audit_installed: true
-package_avahi_removed: true
 package_bind_removed: true
 package_chrony_installed: true
-package_cups_removed: true
 package_cyrus_imapd_removed: true
 package_dhcp_removed: true
 package_dovecot_removed: true
@@ -516,8 +515,10 @@ selinux_policytype: true
 selinux_state: true
 service_auditd_enabled: true
 service_autofs_disabled: true
+service_avahi_daemon_disabled: true
 service_bluetooth_disabled: true
 service_crond_enabled: true
+service_cups_disabled: true
 service_firewalld_enabled: true
 service_nfs_disabled: true
 service_nftables_disabled: true
