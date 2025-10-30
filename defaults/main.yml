@@ -6,9 +6,8 @@ var_screensaver_lock_delay: '5'
 var_sudo_logfile: /var/log/sudo.log
 var_sudo_timestamp_timeout: '5'
 var_authselect_profile: sssd
-login_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
-remote_login_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
-motd_banner_text: ^(Authorized[\s\n]+uses[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
+cis_banner_text: Authorized users only. All activity may be monitored and reported.
+login_banner_text: ^(Authorized[\s\n]+users[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
 var_password_pam_remember: '24'
 var_password_pam_remember_control_flag: requisite,required
 var_accounts_passwords_pam_faillock_deny: '5'
@@ -71,7 +70,6 @@ var_auditd_space_left_action: email|exec|single|halt
 DISA_STIG_RHEL_08_010020: true
 DISA_STIG_RHEL_08_010049: true
 DISA_STIG_RHEL_08_010050: true
-DISA_STIG_RHEL_08_010060: true
 DISA_STIG_RHEL_08_010110: true
 DISA_STIG_RHEL_08_010121: true
 DISA_STIG_RHEL_08_010159: true
@@ -294,9 +292,9 @@ auditd_data_retention_admin_space_left_action: true
 auditd_data_retention_max_log_file: true
 auditd_data_retention_max_log_file_action: true
 auditd_data_retention_space_left_action: true
-banner_etc_issue: true
-banner_etc_issue_net: true
-banner_etc_motd: true
+banner_etc_issue_cis: true
+banner_etc_issue_net_cis: true
+banner_etc_motd_cis: true
 chronyd_run_as_chrony_user: true
 chronyd_specify_remote_server: true
 configure_crypto_policy: true
