@@ -1,6 +1,6 @@
 ---
 # defaults file for rhel8_cis
-var_system_crypto_policy: DEFAULT
+var_system_crypto_policy: DEFAULT:NO-SHA1
 inactivity_timeout_value: '900'
 var_screensaver_lock_delay: '5'
 var_sudo_logfile: /var/log/sudo.log
@@ -26,14 +26,6 @@ var_pam_wheel_group_for_su: sugroup
 var_accounts_tmout: '900'
 var_user_initialization_files_regex: ^\.[\w\- ]+$
 var_accounts_user_umask: '027'
-var_accounts_passwords_pam_faillock_dir: /var/run/faillock
-var_auditd_disk_error_action: syslog|single|halt
-var_auditd_disk_full_action: syslog|single|halt
-var_auditd_action_mail_acct: root
-var_auditd_admin_space_left_action: single|halt
-var_auditd_max_log_file: '6'
-var_auditd_max_log_file_action: keep_logs
-var_auditd_space_left_action: email|exec|single|halt
 sysctl_net_ipv6_conf_all_accept_ra_value: '0'
 sysctl_net_ipv6_conf_all_accept_redirects_value: '0'
 sysctl_net_ipv6_conf_all_accept_source_route_value: '0'
@@ -67,6 +59,14 @@ var_sshd_set_maxstartups: 10:30:60
 sshd_approved_ciphers: -3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se
 sshd_strong_kex: -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1
 sshd_strong_macs: -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com
+var_accounts_passwords_pam_faillock_dir: /var/run/faillock
+var_auditd_disk_error_action: syslog|single|halt
+var_auditd_disk_full_action: syslog|single|halt
+var_auditd_action_mail_acct: root
+var_auditd_admin_space_left_action: single|halt
+var_auditd_max_log_file: '6'
+var_auditd_max_log_file_action: keep_logs
+var_auditd_space_left_action: email|exec|single|halt
 DISA_STIG_RHEL_08_010020: true
 DISA_STIG_RHEL_08_010049: true
 DISA_STIG_RHEL_08_010050: true
@@ -100,6 +100,8 @@ DISA_STIG_RHEL_08_020011: true
 DISA_STIG_RHEL_08_020014: true
 DISA_STIG_RHEL_08_020015: true
 DISA_STIG_RHEL_08_020023: true
+DISA_STIG_RHEL_08_020025: true
+DISA_STIG_RHEL_08_020026: true
 DISA_STIG_RHEL_08_020031: true
 DISA_STIG_RHEL_08_020032: true
 DISA_STIG_RHEL_08_020060: true
@@ -152,6 +154,7 @@ DISA_STIG_RHEL_08_030602: true
 DISA_STIG_RHEL_08_030650: true
 DISA_STIG_RHEL_08_030670: true
 DISA_STIG_RHEL_08_030731: true
+DISA_STIG_RHEL_08_030740: true
 DISA_STIG_RHEL_08_040000: true
 DISA_STIG_RHEL_08_040023: true
 DISA_STIG_RHEL_08_040024: true
@@ -197,6 +200,8 @@ DISA_STIG_RHEL_08_040285: true
 DISA_STIG_RHEL_08_040321: true
 DISA_STIG_RHEL_08_040360: true
 account_disable_post_pw_expiration: true
+account_password_pam_faillock_password_auth: true
+account_password_pam_faillock_system_auth: true
 accounts_maximum_age_login_defs: true
 accounts_no_uid_except_zero: true
 accounts_password_pam_dictcheck: true
@@ -258,6 +263,7 @@ audit_rules_mac_modification: true
 audit_rules_mac_modification_usr_share: true
 audit_rules_media_export: true
 audit_rules_networkconfig_modification: true
+audit_rules_networkconfig_modification_network_scripts: true
 audit_rules_privileged_commands: true
 audit_rules_privileged_commands_kmod: true
 audit_rules_privileged_commands_usermod: true
