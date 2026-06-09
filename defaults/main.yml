@@ -6,7 +6,7 @@ var_sudo_logfile: /var/log/sudo.log
 var_sudo_timestamp_timeout: '15'
 var_authselect_profile: sssd
 cis_banner_text: Authorized users only. All activity may be monitored and reported.
-login_banner_text: ^(Authorized[\s\n]+users[\s\n]+only\.[\s\n]+All[\s\n]+activity[\s\n]+may[\s\n]+be[\s\n]+monitored[\s\n]+and[\s\n]+reported\.|^(?!.*(\\|fedora|rhel|sle|ubuntu)).*)$
+dconf_login_banner_contents: Authorized uses only. All activity may be monitored and reported.
 var_password_pam_remember: '24'
 var_password_pam_remember_control_flag: requisite,required
 var_accounts_passwords_pam_faillock_deny: '5'
@@ -48,7 +48,6 @@ sysctl_net_ipv4_conf_default_secure_redirects_value: '0'
 sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value: '1'
 sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value: '1'
 sysctl_net_ipv4_tcp_syncookies_value: '1'
-sysctl_kernel_kptr_restrict_value: '1'
 var_selinux_policy_name: targeted
 var_selinux_state: enforcing
 var_postfix_inet_interfaces: loopback-only
@@ -67,6 +66,7 @@ var_auditd_admin_space_left_action: single|halt
 var_auditd_max_log_file: '8'
 var_auditd_max_log_file_action: keep_logs
 var_auditd_space_left_action: email|exec|single|halt
+DISA_STIG_RHEL_08_010019: true
 DISA_STIG_RHEL_08_010049: true
 DISA_STIG_RHEL_08_010050: true
 DISA_STIG_RHEL_08_010110: true
@@ -99,7 +99,6 @@ DISA_STIG_RHEL_08_010730: true
 DISA_STIG_RHEL_08_010750: true
 DISA_STIG_RHEL_08_010830: true
 DISA_STIG_RHEL_08_020011: true
-DISA_STIG_RHEL_08_020023: true
 DISA_STIG_RHEL_08_020025: true
 DISA_STIG_RHEL_08_020026: true
 DISA_STIG_RHEL_08_020031: true
@@ -228,7 +227,7 @@ accounts_password_set_max_life_existing: true
 accounts_password_set_warn_age_existing: true
 accounts_password_warn_age_login_defs: true
 accounts_passwords_pam_faillock_deny: true
-accounts_passwords_pam_faillock_deny_root: true
+accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time: true
 accounts_passwords_pam_faillock_unlock_time_with_zero: true
 accounts_root_path_dirs_no_write: true
 accounts_set_post_pw_existing: true
@@ -340,6 +339,7 @@ enable_strategy: true
 ensure_gpgcheck_globally_activated: true
 ensure_gpgcheck_never_disabled: true
 ensure_pam_wheel_group_empty: true
+ensure_redhat_gpgkey_installed: true
 file_at_allow_exists: true
 file_at_deny_not_exist: true
 file_cron_allow_exists: true
@@ -622,6 +622,5 @@ sysctl_net_ipv6_conf_default_accept_source_route: true
 sysctl_net_ipv6_conf_default_forwarding: true
 unknown_severity: true
 unknown_strategy: true
-use_pam_wheel_group_for_su: true
 wireless_disable_interfaces: true
 xwayland_disabled: true
