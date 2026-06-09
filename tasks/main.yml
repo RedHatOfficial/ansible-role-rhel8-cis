@@ -694,7 +694,7 @@
   - no_reboot_needed | bool
   - package_rsync_removed | bool
 
-- name: 'Uninstall xinetd Package: Ensure xinetd is removed'
+- name: 'Uninstall xinetd package if not used by network services: Ensure xinetd is removed'
   ansible.builtin.package:
     name: xinetd
     state: absent
@@ -3245,6 +3245,14 @@
     value: 0
     create: true
     state: present
+  when:
+  - disable_weak_deps | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - '"dnf" in ansible_facts.packages'
   tags:
   - CCE-88727-3
   - disable_weak_deps
@@ -3253,13 +3261,6 @@
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
-  when:
-  - disable_weak_deps | bool
-  - low_complexity | bool
-  - low_disruption | bool
-  - medium_severity | bool
-  - no_reboot_needed | bool
-  - restrict_strategy | bool
 
 - name: Ensure GPG check is globally activated
   community.general.ini_file:
@@ -3378,6 +3379,172 @@
   - low_complexity
   - medium_disruption
   - no_reboot_needed
+
+- name: 'Ensure Red Hat GPG Key Installed: Read permission of GPG key directory'
+  ansible.builtin.stat:
+    path: /etc/pki/rpm-gpg/
+  register: gpg_key_directory_permission
+  check_mode: false
+  tags:
+  - CCE-80795-8
+  - CJIS-5.10.4.1
+  - DISA-STIG-RHEL-08-010019
+  - NIST-800-171-3.4.8
+  - NIST-800-53-CM-5(3)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-12
+  - NIST-800-53-SC-12(3)
+  - NIST-800-53-SI-7
+  - PCI-DSS-Req-6.2
+  - PCI-DSSv4-6.3
+  - PCI-DSSv4-6.3.3
+  - ensure_redhat_gpgkey_installed
+  - high_severity
+  - medium_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - restrict_strategy
+  when:
+  - DISA_STIG_RHEL_08_010019 | bool
+  - ensure_redhat_gpgkey_installed | bool
+  - high_severity | bool
+  - medium_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+
+- name: 'Ensure Red Hat GPG Key Installed: Read signatures in GPG key'
+  ansible.builtin.command: gpg --show-keys --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+  changed_when: false
+  register: gpg_fingerprints
+  failed_when: false
+  check_mode: false
+  tags:
+  - CCE-80795-8
+  - CJIS-5.10.4.1
+  - DISA-STIG-RHEL-08-010019
+  - NIST-800-171-3.4.8
+  - NIST-800-53-CM-5(3)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-12
+  - NIST-800-53-SC-12(3)
+  - NIST-800-53-SI-7
+  - PCI-DSS-Req-6.2
+  - PCI-DSSv4-6.3
+  - PCI-DSSv4-6.3.3
+  - ensure_redhat_gpgkey_installed
+  - high_severity
+  - medium_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - restrict_strategy
+  when:
+  - DISA_STIG_RHEL_08_010019 | bool
+  - ensure_redhat_gpgkey_installed | bool
+  - high_severity | bool
+  - medium_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+
+- name: 'Ensure Red Hat GPG Key Installed: Set Fact - Installed GPG Fingerprints'
+  ansible.builtin.set_fact:
+    gpg_installed_fingerprints: '{{ gpg_fingerprints.stdout | regex_findall(''^pub.*\n(?:^fpr[:]*)([0-9A-Fa-f]*)'', ''\1'')
+      | list }}'
+  tags:
+  - CCE-80795-8
+  - CJIS-5.10.4.1
+  - DISA-STIG-RHEL-08-010019
+  - NIST-800-171-3.4.8
+  - NIST-800-53-CM-5(3)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-12
+  - NIST-800-53-SC-12(3)
+  - NIST-800-53-SI-7
+  - PCI-DSS-Req-6.2
+  - PCI-DSSv4-6.3
+  - PCI-DSSv4-6.3.3
+  - ensure_redhat_gpgkey_installed
+  - high_severity
+  - medium_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - restrict_strategy
+  when:
+  - DISA_STIG_RHEL_08_010019 | bool
+  - ensure_redhat_gpgkey_installed | bool
+  - high_severity | bool
+  - medium_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+
+- name: 'Ensure Red Hat GPG Key Installed: Set Fact - Valid fingerprints'
+  ansible.builtin.set_fact:
+    gpg_valid_fingerprints:
+    - 567E347AD0044ADE55BA8A5F199E2F91FD431D51
+    - 6A6AA7C97C8890AEC6AEBFE2F76F66C3D4082792
+  tags:
+  - CCE-80795-8
+  - CJIS-5.10.4.1
+  - DISA-STIG-RHEL-08-010019
+  - NIST-800-171-3.4.8
+  - NIST-800-53-CM-5(3)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-12
+  - NIST-800-53-SC-12(3)
+  - NIST-800-53-SI-7
+  - PCI-DSS-Req-6.2
+  - PCI-DSSv4-6.3
+  - PCI-DSSv4-6.3.3
+  - ensure_redhat_gpgkey_installed
+  - high_severity
+  - medium_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - restrict_strategy
+  when:
+  - DISA_STIG_RHEL_08_010019 | bool
+  - ensure_redhat_gpgkey_installed | bool
+  - high_severity | bool
+  - medium_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+
+- name: 'Ensure Red Hat GPG Key Installed: Import RedHat GPG key'
+  ansible.builtin.command: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+  when:
+  - DISA_STIG_RHEL_08_010019 | bool
+  - ensure_redhat_gpgkey_installed | bool
+  - high_severity | bool
+  - medium_complexity | bool
+  - medium_disruption | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - gpg_key_directory_permission.stat.mode <= '0755'
+  - (gpg_installed_fingerprints | difference(gpg_valid_fingerprints)) | length == 0
+  - gpg_installed_fingerprints | length > 0
+  - ansible_distribution == "RedHat"
+  tags:
+  - CCE-80795-8
+  - CJIS-5.10.4.1
+  - DISA-STIG-RHEL-08-010019
+  - NIST-800-171-3.4.8
+  - NIST-800-53-CM-5(3)
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-12
+  - NIST-800-53-SC-12(3)
+  - NIST-800-53-SI-7
+  - PCI-DSS-Req-6.2
+  - PCI-DSSv4-6.3
+  - PCI-DSSv4-6.3.3
+  - ensure_redhat_gpgkey_installed
+  - high_severity
+  - medium_complexity
+  - medium_disruption
+  - no_reboot_needed
+  - restrict_strategy
 
 - name: Enable authselect - Check Current authselect Profile
   ansible.builtin.command:
@@ -4248,9 +4415,7 @@
     dest: /etc/dconf/db/gdm.d/00-security-settings
     section: org/gnome/login-screen
     option: banner-message-text
-    value: '''{{ login_banner_text | regex_replace("^\^(.*)\$$", "\1") | regex_replace("^\((.*\.)\|.*\)$", "\1") | regex_replace("\[\\s\\n\]\+","
-      ") | regex_replace("\(\?:\[\\n\]\+\|\(\?:\\\\n\)\+\)", "(n)*") | regex_replace("\\", "") | regex_replace("\(n\)\*",
-      "\\n") }}'''
+    value: '''{{ dconf_login_banner_contents }}'''
     create: true
     no_extra_spaces: true
   register: result_ini
@@ -4938,10 +5103,35 @@
   - no_reboot_needed
   - restrict_strategy
 
+- name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth File. - Get current authselect profile
+  ansible.builtin.command:
+    cmd: authselect current --raw
+  register: authselect_current_profile
+  changed_when: false
+  when:
+  - DISA_STIG_RHEL_08_020026 | bool
+  - account_password_pam_faillock_password_auth | bool
+  - enable_strategy | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - '"kernel-core" in ansible_facts.packages'
+  tags:
+  - CCE-86931-3
+  - DISA-STIG-RHEL-08-020026
+  - NIST-800-53-AC-7 (a)
+  - account_password_pam_faillock_password_auth
+  - enable_strategy
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
 - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth File. - Force reselect authselect
     profile
-  ansible.builtin.shell:
-    cmd: authselect select "$(authselect current --raw)" --force
+  ansible.builtin.command:
+    cmd: authselect select {{ authselect_current_profile.stdout }} --force
   when:
   - DISA_STIG_RHEL_08_020026 | bool
   - account_password_pam_faillock_password_auth | bool
@@ -8273,44 +8463,38 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Check if system relies on authselect tool
+- name: Ensure Root Account Lockout on Failed Password Attempts - Check if system relies on authselect tool
   ansible.builtin.stat:
     path: /usr/bin/authselect
   register: result_authselect_present
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Remediation where authselect tool is present
+- name: Ensure Root Account Lockout on Failed Password Attempts - Remediation where authselect tool is present
   block:
-  - name: Configure the root Account for Failed Password Attempts - Check integrity of authselect current profile
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check integrity of authselect current profile
     ansible.builtin.command:
       cmd: authselect check
     register: result_authselect_check_cmd
     changed_when: false
     check_mode: false
     failed_when: false
-  - name: Configure the root Account for Failed Password Attempts - Informative message based on the authselect integrity
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Informative message based on the authselect integrity
       check result
     ansible.builtin.assert:
       that:
@@ -8323,7 +8507,7 @@
       - In cases where the default authselect profile does not cover a specific demand, a custom authselect profile is recommended.
       success_msg:
       - authselect integrity check passed
-  - name: Configure the root Account for Failed Password Attempts - Get authselect current features
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Get authselect current features
     ansible.builtin.shell:
       cmd: authselect current | tail -n+3 | awk '{ print $2 }'
     register: result_authselect_features
@@ -8331,7 +8515,7 @@
     check_mode: false
     when:
     - result_authselect_check_cmd is success
-  - name: Configure the root Account for Failed Password Attempts - Ensure "with-faillock" feature is enabled using authselect
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure "with-faillock" feature is enabled using authselect
       tool
     ansible.builtin.command:
       cmd: authselect enable-feature with-faillock
@@ -8339,40 +8523,34 @@
     when:
     - result_authselect_check_cmd is success
     - result_authselect_features.stdout is not search("with-faillock")
-  - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
     ansible.builtin.command:
       cmd: authselect apply-changes -b
     when:
     - result_authselect_enable_feature_cmd is not skipped
     - result_authselect_enable_feature_cmd is success
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   - result_authselect_present.stat.exists
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Remediation where authselect tool is not present
+- name: Ensure Root Account Lockout on Failed Password Attempts - Remediation where authselect tool is not present
   block:
-  - name: Configure the root Account for Failed Password Attempts - Check if pam_faillock.so is already enabled
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check if pam_faillock.so is already enabled
     ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail)
@@ -8380,7 +8558,7 @@
     check_mode: true
     changed_when: false
     register: result_pam_faillock_is_enabled
-  - name: Configure the root Account for Failed Password Attempts - Enable pam_faillock.so preauth editing PAM files
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Enable pam_faillock.so preauth editing PAM files
     ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so preauth
@@ -8391,7 +8569,7 @@
     - /etc/pam.d/password-auth
     when:
     - result_pam_faillock_is_enabled.found == 0
-  - name: Configure the root Account for Failed Password Attempts - Enable pam_faillock.so authfail editing PAM files
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Enable pam_faillock.so authfail editing PAM files
     ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so authfail
@@ -8402,7 +8580,7 @@
     - /etc/pam.d/password-auth
     when:
     - result_pam_faillock_is_enabled.found == 0
-  - name: Configure the root Account for Failed Password Attempts - Enable pam_faillock.so account section editing PAM files
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Enable pam_faillock.so account section editing PAM files
     ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: account     required      pam_faillock.so
@@ -8414,116 +8592,98 @@
     when:
     - result_pam_faillock_is_enabled.found == 0
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   - not result_authselect_present.stat.exists
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Check the presence of /etc/security/faillock.conf file
+- name: Ensure Root Account Lockout on Failed Password Attempts - Check the presence of /etc/security/faillock.conf file
   ansible.builtin.stat:
     path: /etc/security/faillock.conf
   register: result_faillock_conf_check
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter in /etc/security/faillock.conf
+- name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter in /etc/security/faillock.conf
   ansible.builtin.lineinfile:
     path: /etc/security/faillock.conf
     regexp: ^\s*even_deny_root
     line: even_deny_root
     state: present
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   - result_faillock_conf_check.stat.exists
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter not
+- name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter not
     in PAM files
   block:
-  - name: Configure the root Account for Failed Password Attempts - Check if /etc/pam.d/system-auth file is present
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check if /etc/pam.d/system-auth file is present
     ansible.builtin.stat:
       path: /etc/pam.d/system-auth
     register: result_pam_auth_file_present
-  - name: Configure the root Account for Failed Password Attempts - Check the proper remediation for the system
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check the proper remediation for the system
     block:
-    - name: Configure the root Account for Failed Password Attempts - Define the PAM file to be edited as a local fact
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Define the PAM file to be edited as a local fact
       ansible.builtin.set_fact:
         pam_file_path: /etc/pam.d/system-auth
-    - name: Configure the root Account for Failed Password Attempts - Check if system relies on authselect tool
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Check if system relies on authselect tool
       ansible.builtin.stat:
         path: /usr/bin/authselect
       register: result_authselect_present
-    - name: Configure the root Account for Failed Password Attempts - Ensure authselect custom profile is used if authselect
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect custom profile is used if authselect
         is present
       block:
-      - name: Configure the root Account for Failed Password Attempts - Check integrity of authselect current profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Check integrity of authselect current profile
         ansible.builtin.command:
           cmd: authselect check
         register: result_authselect_check_cmd
         changed_when: false
         check_mode: false
         failed_when: false
-      - name: Configure the root Account for Failed Password Attempts - Informative message based on the authselect integrity
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Informative message based on the authselect integrity
           check result
         ansible.builtin.assert:
           that:
@@ -8537,21 +8697,21 @@
             recommended.
           success_msg:
           - authselect integrity check passed
-      - name: Configure the root Account for Failed Password Attempts - Get authselect current profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Get authselect current profile
         ansible.builtin.shell:
           cmd: authselect current -r | awk '{ print $1 }'
         register: result_authselect_profile
         changed_when: false
         when:
         - result_authselect_check_cmd is success
-      - name: Configure the root Account for Failed Password Attempts - Define the current authselect profile as a local fact
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Define the current authselect profile as a local fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
           authselect_custom_profile: '{{ result_authselect_profile.stdout }}'
         when:
         - result_authselect_profile is not skipped
         - result_authselect_profile.stdout is match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Define the new authselect custom profile as a local
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Define the new authselect custom profile as a local
           fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
@@ -8559,7 +8719,7 @@
         when:
         - result_authselect_profile is not skipped
         - result_authselect_profile.stdout is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Get authselect current features to also enable them
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Get authselect current features to also enable them
           in the custom profile
         ansible.builtin.shell:
           cmd: authselect current | tail -n+3 | awk '{ print $2 }'
@@ -8569,7 +8729,7 @@
         when:
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Check if any custom profile with the same name was
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Check if any custom profile with the same name was
           already created
         ansible.builtin.stat:
           path: /etc/authselect/{{ authselect_custom_profile }}
@@ -8578,7 +8738,7 @@
         when:
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Create an authselect custom profile based on the current
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Create an authselect custom profile based on the current
           profile
         ansible.builtin.command:
           cmd: authselect create-profile hardening -b {{ authselect_current_profile }}
@@ -8587,7 +8747,7 @@
         - result_authselect_check_cmd is success
         - authselect_current_profile is not match("^(custom/|local)")
         - not result_authselect_custom_profile_present.stat.exists
-      - name: Configure the root Account for Failed Password Attempts - Create an authselect custom profile based on sssd
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Create an authselect custom profile based on sssd
           profile
         ansible.builtin.command:
           cmd: authselect create-profile hardening -b sssd
@@ -8596,7 +8756,7 @@
         - result_authselect_check_cmd is success
         - authselect_current_profile is match("local")
         - not result_authselect_custom_profile_present.stat.exists
-      - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
         ansible.builtin.command:
           cmd: authselect apply-changes -b --backup=before-hardening-custom-profile
         when:
@@ -8604,7 +8764,7 @@
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
         - authselect_custom_profile is not match(authselect_current_profile)
-      - name: Configure the root Account for Failed Password Attempts - Ensure the authselect custom profile is selected
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the authselect custom profile is selected
         ansible.builtin.command:
           cmd: authselect select {{ authselect_custom_profile }}
         register: result_pam_authselect_select_profile
@@ -8613,7 +8773,7 @@
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
         - authselect_custom_profile is not match(authselect_current_profile)
-      - name: Configure the root Account for Failed Password Attempts - Restore the authselect features in the custom profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Restore the authselect features in the custom profile
         ansible.builtin.command:
           cmd: authselect enable-feature {{ item }}
         loop: '{{ result_authselect_features.stdout_lines }}'
@@ -8622,14 +8782,14 @@
         - result_authselect_profile is not skipped
         - result_authselect_features is not skipped
         - result_pam_authselect_select_profile is not skipped
-      - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
         ansible.builtin.command:
           cmd: authselect apply-changes -b --backup=after-hardening-custom-profile
         when:
         - result_authselect_check_cmd is success
         - result_authselect_profile is not skipped
         - result_pam_authselect_restore_features is not skipped
-      - name: Configure the root Account for Failed Password Attempts - Change the PAM file to be edited according to the
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Change the PAM file to be edited according to the
           custom authselect profile
         ansible.builtin.set_fact:
           pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path | basename }}
@@ -8637,15 +8797,15 @@
         - authselect_custom_profile is defined
       when:
       - result_authselect_present.stat.exists
-    - name: Configure the root Account for Failed Password Attempts - Define a fact for control already filtered in case filters
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Define a fact for control already filtered in case filters
         are used
       ansible.builtin.set_fact:
         pam_module_control: ''
-    - name: Configure the root Account for Failed Password Attempts - Check if {{ pam_file_path }} file is present
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Check if {{ pam_file_path }} file is present
       ansible.builtin.stat:
         path: '{{ pam_file_path }}'
       register: result_pam_file_present
-    - name: Configure the root Account for Failed Password Attempts - Ensure the "even_deny_root" option from "pam_faillock.so"
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the "even_deny_root" option from "pam_faillock.so"
         is not present in {{ pam_file_path }}
       ansible.builtin.replace:
         dest: '{{ pam_file_path }}'
@@ -8654,7 +8814,7 @@
       register: result_pam_option_removal
       when:
       - result_pam_file_present.stat.exists
-    - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
       ansible.builtin.command:
         cmd: authselect apply-changes -b
       when:
@@ -8662,30 +8822,30 @@
       - result_pam_option_removal is changed
     when:
     - result_pam_auth_file_present.stat.exists
-  - name: Configure the root Account for Failed Password Attempts - Check if /etc/pam.d/password-auth file is present
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check if /etc/pam.d/password-auth file is present
     ansible.builtin.stat:
       path: /etc/pam.d/password-auth
     register: result_pam_password_auth_file_present
-  - name: Configure the root Account for Failed Password Attempts - Check the proper remediation for the system
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check the proper remediation for the system
     block:
-    - name: Configure the root Account for Failed Password Attempts - Define the PAM file to be edited as a local fact
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Define the PAM file to be edited as a local fact
       ansible.builtin.set_fact:
         pam_file_path: /etc/pam.d/password-auth
-    - name: Configure the root Account for Failed Password Attempts - Check if system relies on authselect tool
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Check if system relies on authselect tool
       ansible.builtin.stat:
         path: /usr/bin/authselect
       register: result_authselect_present
-    - name: Configure the root Account for Failed Password Attempts - Ensure authselect custom profile is used if authselect
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect custom profile is used if authselect
         is present
       block:
-      - name: Configure the root Account for Failed Password Attempts - Check integrity of authselect current profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Check integrity of authselect current profile
         ansible.builtin.command:
           cmd: authselect check
         register: result_authselect_check_cmd
         changed_when: false
         check_mode: false
         failed_when: false
-      - name: Configure the root Account for Failed Password Attempts - Informative message based on the authselect integrity
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Informative message based on the authselect integrity
           check result
         ansible.builtin.assert:
           that:
@@ -8699,21 +8859,21 @@
             recommended.
           success_msg:
           - authselect integrity check passed
-      - name: Configure the root Account for Failed Password Attempts - Get authselect current profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Get authselect current profile
         ansible.builtin.shell:
           cmd: authselect current -r | awk '{ print $1 }'
         register: result_authselect_profile
         changed_when: false
         when:
         - result_authselect_check_cmd is success
-      - name: Configure the root Account for Failed Password Attempts - Define the current authselect profile as a local fact
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Define the current authselect profile as a local fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
           authselect_custom_profile: '{{ result_authselect_profile.stdout }}'
         when:
         - result_authselect_profile is not skipped
         - result_authselect_profile.stdout is match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Define the new authselect custom profile as a local
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Define the new authselect custom profile as a local
           fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
@@ -8721,7 +8881,7 @@
         when:
         - result_authselect_profile is not skipped
         - result_authselect_profile.stdout is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Get authselect current features to also enable them
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Get authselect current features to also enable them
           in the custom profile
         ansible.builtin.shell:
           cmd: authselect current | tail -n+3 | awk '{ print $2 }'
@@ -8731,7 +8891,7 @@
         when:
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Check if any custom profile with the same name was
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Check if any custom profile with the same name was
           already created
         ansible.builtin.stat:
           path: /etc/authselect/{{ authselect_custom_profile }}
@@ -8740,7 +8900,7 @@
         when:
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
-      - name: Configure the root Account for Failed Password Attempts - Create an authselect custom profile based on the current
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Create an authselect custom profile based on the current
           profile
         ansible.builtin.command:
           cmd: authselect create-profile hardening -b {{ authselect_current_profile }}
@@ -8749,7 +8909,7 @@
         - result_authselect_check_cmd is success
         - authselect_current_profile is not match("^(custom/|local)")
         - not result_authselect_custom_profile_present.stat.exists
-      - name: Configure the root Account for Failed Password Attempts - Create an authselect custom profile based on sssd
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Create an authselect custom profile based on sssd
           profile
         ansible.builtin.command:
           cmd: authselect create-profile hardening -b sssd
@@ -8758,7 +8918,7 @@
         - result_authselect_check_cmd is success
         - authselect_current_profile is match("local")
         - not result_authselect_custom_profile_present.stat.exists
-      - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
         ansible.builtin.command:
           cmd: authselect apply-changes -b --backup=before-hardening-custom-profile
         when:
@@ -8766,7 +8926,7 @@
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
         - authselect_custom_profile is not match(authselect_current_profile)
-      - name: Configure the root Account for Failed Password Attempts - Ensure the authselect custom profile is selected
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the authselect custom profile is selected
         ansible.builtin.command:
           cmd: authselect select {{ authselect_custom_profile }}
         register: result_pam_authselect_select_profile
@@ -8775,7 +8935,7 @@
         - result_authselect_profile is not skipped
         - authselect_current_profile is not match("custom/")
         - authselect_custom_profile is not match(authselect_current_profile)
-      - name: Configure the root Account for Failed Password Attempts - Restore the authselect features in the custom profile
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Restore the authselect features in the custom profile
         ansible.builtin.command:
           cmd: authselect enable-feature {{ item }}
         loop: '{{ result_authselect_features.stdout_lines }}'
@@ -8784,14 +8944,14 @@
         - result_authselect_profile is not skipped
         - result_authselect_features is not skipped
         - result_pam_authselect_select_profile is not skipped
-      - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
         ansible.builtin.command:
           cmd: authselect apply-changes -b --backup=after-hardening-custom-profile
         when:
         - result_authselect_check_cmd is success
         - result_authselect_profile is not skipped
         - result_pam_authselect_restore_features is not skipped
-      - name: Configure the root Account for Failed Password Attempts - Change the PAM file to be edited according to the
+      - name: Ensure Root Account Lockout on Failed Password Attempts - Change the PAM file to be edited according to the
           custom authselect profile
         ansible.builtin.set_fact:
           pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path | basename }}
@@ -8799,15 +8959,15 @@
         - authselect_custom_profile is defined
       when:
       - result_authselect_present.stat.exists
-    - name: Configure the root Account for Failed Password Attempts - Define a fact for control already filtered in case filters
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Define a fact for control already filtered in case filters
         are used
       ansible.builtin.set_fact:
         pam_module_control: ''
-    - name: Configure the root Account for Failed Password Attempts - Check if {{ pam_file_path }} file is present
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Check if {{ pam_file_path }} file is present
       ansible.builtin.stat:
         path: '{{ pam_file_path }}'
       register: result_pam_file_present
-    - name: Configure the root Account for Failed Password Attempts - Ensure the "even_deny_root" option from "pam_faillock.so"
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the "even_deny_root" option from "pam_faillock.so"
         is not present in {{ pam_file_path }}
       ansible.builtin.replace:
         dest: '{{ pam_file_path }}'
@@ -8816,7 +8976,7 @@
       register: result_pam_option_removal
       when:
       - result_pam_file_present.stat.exists
-    - name: Configure the root Account for Failed Password Attempts - Ensure authselect changes are applied
+    - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure authselect changes are applied
       ansible.builtin.command:
         cmd: authselect apply-changes -b
       when:
@@ -8825,34 +8985,28 @@
     when:
     - result_pam_password_auth_file_present.stat.exists
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   - result_faillock_conf_check.stat.exists
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
 
-- name: Configure the root Account for Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter in PAM
+- name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the pam_faillock.so even_deny_root parameter in PAM
     files
   block:
-  - name: Configure the root Account for Failed Password Attempts - Check if pam_faillock.so even_deny_root parameter is already
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Check if pam_faillock.so even_deny_root parameter is already
       enabled in pam files
     ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
@@ -8861,7 +9015,7 @@
     check_mode: true
     changed_when: false
     register: result_pam_faillock_even_deny_root_parameter_is_present
-  - name: Configure the root Account for Failed Password Attempts - Ensure the inclusion of pam_faillock.so preauth even_deny_root
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the inclusion of pam_faillock.so preauth even_deny_root
       parameter in auth section
     ansible.builtin.lineinfile:
       path: '{{ item }}'
@@ -8874,7 +9028,7 @@
     - /etc/pam.d/password-auth
     when:
     - result_pam_faillock_even_deny_root_parameter_is_present.found == 0
-  - name: Configure the root Account for Failed Password Attempts - Ensure the inclusion of pam_faillock.so authfail even_deny_root
+  - name: Ensure Root Account Lockout on Failed Password Attempts - Ensure the inclusion of pam_faillock.so authfail even_deny_root
       parameter in auth section
     ansible.builtin.lineinfile:
       path: '{{ item }}'
@@ -8888,24 +9042,18 @@
     when:
     - result_pam_faillock_even_deny_root_parameter_is_present.found == 0
   when:
-  - DISA_STIG_RHEL_08_020023 | bool
-  - accounts_passwords_pam_faillock_deny_root | bool
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time | bool
   - low_complexity | bool
   - low_disruption | bool
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - ( ansible_distribution == 'RedHat' and ansible_distribution_version is version('8.2', '>=') and "pam" in ansible_facts.packages
-    )
+  - '"pam" in ansible_facts.packages'
   - not result_faillock_conf_check.stat.exists
   tags:
-  - CCE-80668-7
-  - DISA-STIG-RHEL-08-020023
-  - NIST-800-53-AC-7(b)
-  - NIST-800-53-CM-6(a)
-  - NIST-800-53-IA-5(c)
-  - accounts_passwords_pam_faillock_deny_root
+  - CCE-86629-3
+  - accounts_passwords_pam_faillock_even_deny_root_or_root_unlock_time
   - low_complexity
   - low_disruption
   - medium_severity
@@ -12362,7 +12510,7 @@
 
 - name: Lock the password of the user accounts other than root with uid 0
   ansible.builtin.command: passwd -l {{ item.key }}
-  loop: '{{ getent_passwd | dict2items | rejectattr(''key'', ''search'', ''root'') | list }}'
+  loop: '{{ getent_passwd | dict2items | rejectattr(''key'', ''equalto'', ''root'') | list }}'
   when:
   - DISA_STIG_RHEL_08_040200 | bool
   - accounts_no_uid_except_zero | bool
@@ -12601,31 +12749,6 @@
   - no_reboot_needed
   - no_shelllogin_for_systemaccounts
   - restrict_strategy
-
-- name: Enforce Usage of pam_wheel with Group Parameter for su Authentication - Add the group to the /etc/pam.d/su file
-  ansible.builtin.lineinfile:
-    path: /etc/pam.d/su
-    state: present
-    regexp: ^[\s]*#[\s]*auth[\s]+required[\s]+pam_wheel\.so[\s]+use_uid group=$
-    line: auth             required        pam_wheel.so use_uid group={{ var_pam_wheel_group_for_su }}
-  when:
-  - low_complexity | bool
-  - low_disruption | bool
-  - medium_severity | bool
-  - no_reboot_needed | bool
-  - restrict_strategy | bool
-  - use_pam_wheel_group_for_su | bool
-  - '"pam" in ansible_facts.packages'
-  tags:
-  - CCE-86064-3
-  - PCI-DSSv4-2.2
-  - PCI-DSSv4-2.2.6
-  - low_complexity
-  - low_disruption
-  - medium_severity
-  - no_reboot_needed
-  - restrict_strategy
-  - use_pam_wheel_group_for_su
 
 - name: Correct any occurrence of TMOUT in /etc/profile
   ansible.builtin.replace:
@@ -13054,6 +13177,14 @@
 - name: Ensure User Bash History File Has Correct Permissions - Gather User Info
   ansible.builtin.getent:
     database: passwd
+  when:
+  - file_permission_user_bash_history | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
+  - '"bash" in ansible_facts.packages'
   tags:
   - CCE-89104-4
   - file_permission_user_bash_history
@@ -13062,13 +13193,6 @@
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
-  when:
-  - file_permission_user_bash_history | bool
-  - low_complexity | bool
-  - low_disruption | bool
-  - medium_severity | bool
-  - no_reboot_needed | bool
-  - restrict_strategy | bool
 
 - name: Ensure User Bash History File Has Correct Permissions - Check Bash History Files Existence
   ansible.builtin.stat:
@@ -13082,6 +13206,7 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
+  - '"bash" in ansible_facts.packages'
   - item.value[4] != "/sbin/nologin"
   - item.key not in ["nobody", "nfsnobody"]
   - item.value[1] | int >= 1000
@@ -13106,6 +13231,7 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
+  - '"bash" in ansible_facts.packages'
   - item.stat is defined
   - item.stat.exists
   tags:
@@ -13345,7 +13471,6 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   - '"bash" in ansible_facts.packages'
   tags:
   - CCE-81036-6
@@ -13370,7 +13495,6 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   - '"bash" in ansible_facts.packages'
   - umask_replace.found > 0
   tags:
@@ -13396,7 +13520,6 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   - '"bash" in ansible_facts.packages'
   - umask_replace.found == 0
   tags:
@@ -13426,8 +13549,7 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
-  - '"shadow-utils" in ansible_facts.packages'
+  - ( "shadow-utils" in ansible_facts.packages and "kernel-core" in ansible_facts.packages )
   tags:
   - CCE-82888-9
   - DISA-STIG-RHEL-08-020351
@@ -13453,8 +13575,7 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
-  - '"shadow-utils" in ansible_facts.packages'
+  - ( "shadow-utils" in ansible_facts.packages and "kernel-core" in ansible_facts.packages )
   - result_umask_is_set.found > 0
   tags:
   - CCE-82888-9
@@ -13481,8 +13602,7 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
-  - '"shadow-utils" in ansible_facts.packages'
+  - ( "shadow-utils" in ansible_facts.packages and "kernel-core" in ansible_facts.packages )
   - result_umask_is_set.found == 0
   tags:
   - CCE-82888-9
@@ -13505,14 +13625,6 @@
     - '*.sh'
     contains: ^[\s]*umask\s+\d+
   register: result_profile_d_files
-  when:
-  - accounts_umask_etc_profile | bool
-  - low_complexity | bool
-  - low_disruption | bool
-  - medium_severity | bool
-  - no_reboot_needed | bool
-  - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   tags:
   - CCE-81035-8
   - NIST-800-53-AC-6(1)
@@ -13523,6 +13635,13 @@
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
+  when:
+  - accounts_umask_etc_profile | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
 
 - name: Ensure the Default Umask is Set Correctly in /etc/profile - Replace Existing umask Value in Files From /etc/profile.d
   ansible.builtin.replace:
@@ -13538,7 +13657,6 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   - result_profile_d_files.matched
   tags:
   - CCE-81035-8
@@ -13565,7 +13683,6 @@
   - medium_severity | bool
   - no_reboot_needed | bool
   - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   - not result_profile_d_files.matched
   tags:
   - CCE-81035-8
@@ -13585,14 +13702,6 @@
     regexp: ^(\s*)umask\s+\d+
     replace: \1umask {{ var_accounts_user_umask }}
   register: result_umask_replaced_profile
-  when:
-  - accounts_umask_etc_profile | bool
-  - low_complexity | bool
-  - low_disruption | bool
-  - medium_severity | bool
-  - no_reboot_needed | bool
-  - restrict_strategy | bool
-  - '"kernel-core" in ansible_facts.packages'
   tags:
   - CCE-81035-8
   - NIST-800-53-AC-6(1)
@@ -13603,6 +13712,13 @@
   - medium_severity
   - no_reboot_needed
   - restrict_strategy
+  when:
+  - accounts_umask_etc_profile | bool
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - no_reboot_needed | bool
+  - restrict_strategy | bool
 
 - name: Set the file_groupowner_grub2_cfg_newgroup variable if represented by gid
   ansible.builtin.set_fact:
@@ -21629,7 +21745,7 @@
   - wireless_disable_interfaces | bool
   - ( not ( ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"] ) )
   - '''NetworkManager'' in ansible_facts.packages'
-  - ansible_facts.services['NetworkManager.service'].state == 'running'
+  - ('NetworkManager.service' in ansible_facts.services and ansible_facts.services['NetworkManager.service'].state == 'running')
   tags:
   - CCE-83501-7
   - DISA-STIG-RHEL-08-040110
@@ -29507,8 +29623,7 @@
 
 - name: Restrict Exposed Kernel Pointer Addresses Access - Find all files that set kernel.kptr_restrict to correct value
   ansible.builtin.shell:
-    cmd: find -L {{ sysctl_paths | join(" ") }} -type f -name '*.conf' | xargs grep -HP '^\s*kernel.kptr_restrict\s*=\s*{{
-      sysctl_kernel_kptr_restrict_value }}$'
+    cmd: find -L {{ sysctl_paths | join(" ") }} -type f -name '*.conf' | xargs grep -HP '^\s*kernel.kptr_restrict\s*=\s*1$'
   register: find_correct_value
   check_mode: false
   changed_when: false
@@ -29598,10 +29713,10 @@
   - reboot_required
   - sysctl_kernel_kptr_restrict
 
-- name: Restrict Exposed Kernel Pointer Addresses Access - Ensure sysctl kernel.kptr_restrict is set
+- name: Restrict Exposed Kernel Pointer Addresses Access - Ensure sysctl kernel.kptr_restrict is set to 1
   ansible.posix.sysctl:
     name: kernel.kptr_restrict
-    value: '{{ sysctl_kernel_kptr_restrict_value }}'
+    value: '1'
     sysctl_file: /etc/sysctl.d/kernel_kptr_restrict.conf
     state: present
     reload: true
@@ -30008,12 +30123,13 @@
   - no_reboot_needed
   - restrict_strategy
 
-- name: Ensure SELinux is Not Disabled - Check current SELinux state
+- name: Ensure SELinux is Not Disabled - Check current SELinux configuration
   ansible.builtin.command:
-    cmd: getenforce
-  register: current_selinux_state
+    cmd: grep -oP '^\s*SELINUX=\K(enforcing|permissive|disabled)' /etc/selinux/config
+  register: selinux_config_state
   check_mode: false
   changed_when: false
+  failed_when: false
   when:
   - high_severity | bool
   - low_complexity | bool
@@ -30031,31 +30147,39 @@
   - restrict_strategy
   - selinux_not_disabled
 
-- name: Ensure SELinux is Not Disabled
+- name: Ensure SELinux is Not Disabled - Set SELinux state to permissive if disabled or not configured
   block:
-  - name: Check for duplicate values
-    ansible.builtin.lineinfile:
-      path: /etc/selinux/config
-      create: true
-      regexp: (?i)^SELINUX=
-      state: absent
-    check_mode: true
-    changed_when: false
-    register: dupes
-  - name: Deduplicate values from /etc/selinux/config
-    ansible.builtin.lineinfile:
-      path: /etc/selinux/config
-      create: true
-      regexp: (?i)^SELINUX=
-      state: absent
-    when: dupes.found is defined and dupes.found > 1
-  - name: Insert correct line to /etc/selinux/config
-    ansible.builtin.lineinfile:
-      path: /etc/selinux/config
-      create: true
-      regexp: (?i)^SELINUX=
-      line: SELINUX=permissive
-      state: present
+  - name: Ensure SELinux is Not Disabled
+    block:
+    - name: Check for duplicate values
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        create: true
+        regexp: (?i)^SELINUX=
+        state: absent
+      check_mode: true
+      changed_when: false
+      register: dupes
+    - name: Deduplicate values from /etc/selinux/config
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        create: true
+        regexp: (?i)^SELINUX=
+        state: absent
+      when: dupes.found is defined and dupes.found > 1
+    - name: Insert correct line to /etc/selinux/config
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        create: true
+        regexp: (?i)^SELINUX=
+        line: SELINUX=permissive
+        state: present
+  - name: Ensure SELinux is Not Disabled - Mark system to relabel SELinux on next boot
+    ansible.builtin.file:
+      path: /.autorelabel
+      state: touch
+      access_time: preserve
+      modification_time: preserve
   when:
   - high_severity | bool
   - low_complexity | bool
@@ -30064,30 +30188,7 @@
   - restrict_strategy | bool
   - selinux_not_disabled | bool
   - '"kernel-core" in ansible_facts.packages'
-  tags:
-  - CCE-86151-8
-  - high_severity
-  - low_complexity
-  - low_disruption
-  - reboot_required
-  - restrict_strategy
-  - selinux_not_disabled
-
-- name: Ensure SELinux is Not Disabled - Mark system to relabel SELinux on next boot
-  ansible.builtin.file:
-    path: /.autorelabel
-    state: touch
-    access_time: preserve
-    modification_time: preserve
-  when:
-  - high_severity | bool
-  - low_complexity | bool
-  - low_disruption | bool
-  - reboot_required | bool
-  - restrict_strategy | bool
-  - selinux_not_disabled | bool
-  - '"kernel-core" in ansible_facts.packages'
-  - current_selinux_state.stdout | lower != "permissive"
+  - selinux_config_state.stdout not in ['enforcing', 'permissive']
   tags:
   - CCE-86151-8
   - high_severity
@@ -31884,13 +31985,30 @@
   - no_reboot_needed
 
 - name: Make changes to Postfix configuration file
-  ansible.builtin.lineinfile:
-    path: /etc/postfix/main.cf
-    create: false
-    regexp: (?i)^inet_interfaces\s*=\s.*
-    line: inet_interfaces = {{ var_postfix_inet_interfaces }}
-    state: present
-    insertafter: ^inet_interfaces\s*=\s.*
+  block:
+  - name: Check for duplicate values
+    ansible.builtin.lineinfile:
+      path: /etc/postfix/main.cf
+      create: false
+      regexp: (?i)^inet_interfaces\s*=\s*.*$
+      state: absent
+    check_mode: true
+    changed_when: false
+    register: dupes
+  - name: Deduplicate values from /etc/postfix/main.cf
+    ansible.builtin.lineinfile:
+      path: /etc/postfix/main.cf
+      create: false
+      regexp: (?i)^inet_interfaces\s*=\s*.*$
+      state: absent
+    when: dupes.found is defined and dupes.found > 1
+  - name: Insert correct line to /etc/postfix/main.cf
+    ansible.builtin.lineinfile:
+      path: /etc/postfix/main.cf
+      create: false
+      regexp: (?i)^inet_interfaces\s*=\s*.*$
+      line: inet_interfaces = {{ var_postfix_inet_interfaces }}
+      state: present
   when:
   - low_complexity | bool
   - low_disruption | bool
@@ -31899,7 +32017,6 @@
   - postfix_network_listening_disabled | bool
   - restrict_strategy | bool
   - '"kernel-core" in ansible_facts.packages'
-  - '"postfix" in ansible_facts.packages'
   - '"postfix" in ansible_facts.packages'
   tags:
   - CCE-82174-4
@@ -37331,7 +37448,7 @@
   - '"audit" in ansible_facts.packages'
   - '"kernel-core" in ansible_facts.packages'
   - (augenrules_audit_rules_privilege_function_update_result.changed or auditctl_audit_rules_privilege_function_update_result.changed)
-  - ansible_facts.services["auditd.service"].state == "running"
+  - ("auditd.service" in ansible_facts.services and ansible_facts.services["auditd.service"].state == "running")
   tags:
   - CCE-90209-8
   - audit_rules_suid_auid_privilege_function
